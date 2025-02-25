@@ -32,7 +32,9 @@ public class AppUser {
     private String email;
     private String username;
     private Character initial;
-    private String password;
+
+    @Column(nullable = false)
+    private String password; // to hash with BCrypt
 
     @CreationTimestamp
     @Column(updatable = false, nullable = false)
@@ -46,6 +48,6 @@ public class AppUser {
     private Instant lastLoginAt; // to set manually
 
 
-
-
+    public AppUser(String email, String username, String password) {
+    }
 }
