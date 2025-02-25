@@ -31,6 +31,8 @@ public class AppUser {
     private Long id;
     private String email;
     private String username;
+
+    @Transient
     private Character initial;
 
     @Column(nullable = false)
@@ -47,7 +49,11 @@ public class AppUser {
     @Column
     private Instant lastLoginAt; // to set manually
 
-
     public AppUser(String email, String username, String password) {
     }
+
+    public Character getInitial(){
+        return this.username.charAt(0);
+    }
+
 }
