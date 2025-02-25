@@ -15,8 +15,8 @@ import java.time.Instant;
 @NoArgsConstructor
 @Data
 @Entity
-@Table
-public class User {
+@Table(name = "users")
+public class AppUser {
 
     @Id
     @SequenceGenerator(
