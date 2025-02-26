@@ -5,6 +5,7 @@ import com.github.heisdanielade.pamietampsa.repository.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Optional;
 
 @Service
@@ -29,7 +30,10 @@ public class AppUserService {
         } else if (appUser.getPassword().length() < 6){
             throw new IllegalStateException("(e) Password is too short, min. (6 chars)");
         }
+        appUser.setLastLoginAt(Instant.now());
         appUserRepository.save(appUser);
-
     }
+
+
+
 }
