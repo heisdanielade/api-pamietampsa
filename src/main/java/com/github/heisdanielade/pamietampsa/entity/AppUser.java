@@ -50,6 +50,9 @@ public class AppUser {
     private Instant lastLoginAt; // to set manually
 
     public AppUser(String email, String username, String password) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
     }
 
     public Character getInitial(){

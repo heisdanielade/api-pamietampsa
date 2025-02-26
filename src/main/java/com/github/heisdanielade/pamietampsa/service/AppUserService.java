@@ -5,7 +5,6 @@ import com.github.heisdanielade.pamietampsa.repository.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service
@@ -16,9 +15,9 @@ public class AppUserService {
     public AppUserService(AppUserRepository appUserRepository){
         this.appUserRepository = appUserRepository;
     }
-    
+
     // Register new user
-    public void registerNewAppUser(AppUser appUser){
+    public void addNewAppUser(AppUser appUser){
         Optional<AppUser> appUserOptionalEmail = appUserRepository.findUserByEmail(appUser.getEmail());
         Optional<AppUser> appUserOptionalUsername = appUserRepository.findUserByUsername(appUser.getUsername());
 
