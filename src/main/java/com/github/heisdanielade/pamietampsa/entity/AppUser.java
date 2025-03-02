@@ -1,6 +1,7 @@
 package com.github.heisdanielade.pamietampsa.entity;
 
 
+import com.github.heisdanielade.pamietampsa.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +10,11 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -44,7 +47,8 @@ public class AppUser implements UserDetails {
     @Column(nullable = false)
     private String password; // to hash with BCrypt
 
-//    private Role role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @CreationTimestamp
     @Column(updatable = false, nullable = false)
@@ -56,6 +60,8 @@ public class AppUser implements UserDetails {
 
     @Column
     private Instant lastLoginAt; // to set manually
+
+    private LocalDate accountExpirationDate = null;
 
     public AppUser(String email, String username, String password) {
         this.email = email;
@@ -69,12 +75,15 @@ public class AppUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+        if (this.accountExpirationDate == null){
+            return true;
+        }
+        return LocalDate.now().isBefore(accountExpirationDate);
     }
 
     @Override
