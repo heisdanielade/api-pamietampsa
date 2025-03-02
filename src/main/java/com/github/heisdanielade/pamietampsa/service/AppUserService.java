@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -32,6 +33,13 @@ public class AppUserService {
         }
         appUser.setLastLoginAt(Instant.now());
         appUserRepository.save(appUser);
+    }
+
+
+    // Delete user
+    public void deleteAppUser(AppUser appUser){
+        // Set the account expiration date to 2 weeks timers
+        appUser.setAccountExpirationDate(LocalDate.now().plusDays(14));
     }
 
 
