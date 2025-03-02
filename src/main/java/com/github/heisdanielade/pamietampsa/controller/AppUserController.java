@@ -20,7 +20,7 @@ public class AppUserController {
     public String hello(){
         return "Hello World!";
     }
-
+    
 
     // Registration endpoint
     @PostMapping(path = "/sign-up")
