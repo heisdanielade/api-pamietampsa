@@ -34,8 +34,9 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Email already in use");
         }
 
-        
+        Role role = Role.USER; // Default role is USER
         AppUser user = new AppUser(null, request.getEmail(), passwordEncoder.encode(request.getPassword()));
+        user.setRole(role);
         userRepository.save(user);
 
         return ResponseEntity.ok("User registered successfully");
