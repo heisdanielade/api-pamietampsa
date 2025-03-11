@@ -38,7 +38,10 @@ public class AppUser implements UserDetails {
             generator = "user_sequence"
     )
     private Long id;
+
+    @Column(unique = true, nullable = false)
     private String email;
+
     private String username;
 
     @Transient

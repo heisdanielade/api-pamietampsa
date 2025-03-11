@@ -20,7 +20,7 @@ public class AppUserService {
 
     // Register new user
     public void addNewAppUser(AppUser appUser){
-        Optional<AppUser> appUserOptionalEmail = appUserRepository.findUserByEmail(appUser.getEmail());
+        Optional<AppUser> appUserOptionalEmail = appUserRepository.findByEmail(appUser.getEmail());
         Optional<AppUser> appUserOptionalUsername = appUserRepository.findUserByUsername(appUser.getUsername());
 
         // Validations - email, username, password
