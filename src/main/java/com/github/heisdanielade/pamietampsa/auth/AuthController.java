@@ -1,7 +1,9 @@
 package com.github.heisdanielade.pamietampsa.auth;
 
 import com.github.heisdanielade.pamietampsa.dto.LoginRequest;
+import com.github.heisdanielade.pamietampsa.dto.SignupRequest;
 import com.github.heisdanielade.pamietampsa.entity.AppUser;
+import com.github.heisdanielade.pamietampsa.enums.Role;
 import com.github.heisdanielade.pamietampsa.repository.AppUserRepository;
 import com.github.heisdanielade.pamietampsa.util.JwtUtil;
 import org.springframework.http.ResponseEntity;
@@ -27,11 +29,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<String> register(@RequestBody SignupRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("Email already in use");
         }
 
+        
         AppUser user = new AppUser(null, request.getEmail(), passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
 

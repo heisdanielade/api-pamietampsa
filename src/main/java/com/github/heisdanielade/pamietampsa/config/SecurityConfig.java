@@ -1,5 +1,6 @@
 package com.github.heisdanielade.pamietampsa.config;
 
+import com.github.heisdanielade.pamietampsa.util.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -1,6 +1,5 @@
-package com.github.heisdanielade.pamietampsa.config;
+package com.github.heisdanielade.pamietampsa.util;
 
-import com.github.heisdanielade.pamietampsa.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

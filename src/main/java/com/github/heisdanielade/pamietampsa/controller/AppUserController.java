@@ -9,24 +9,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/api/v1/")
 public class AppUserController {
 
-    private final AppUserService appUserService;
-
-    @Autowired
-    public AppUserController(AppUserService appUserService) {
-        this.appUserService = appUserService;
-    }
-
     @GetMapping(path = "/hello")
     public String hello(){
         return "Hello World!";
     }
     
-
-    // Registration endpoint
-    @PostMapping(path = "/sign-up")
-    public void registerNewAppUser(@RequestBody AppUser appUser){
-        appUserService.addNewAppUser(appUser);
-    }
 
 
 }
