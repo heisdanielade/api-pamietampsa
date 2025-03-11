@@ -40,7 +40,7 @@ public class AppUser implements UserDetails {
     private Character initial;
 
     @Column(nullable = false)
-    private String password; // to hash with BCrypt
+    private String password;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -50,11 +50,10 @@ public class AppUser implements UserDetails {
     private Instant createdAt;
 
     @UpdateTimestamp
-    @Column(nullable = false)
     private Instant updatedAt;
 
     @Column
-    private Instant lastLoginAt; // to set manually
+    private Instant lastLoginAt;
 
     private LocalDate accountExpirationDate = null;
 

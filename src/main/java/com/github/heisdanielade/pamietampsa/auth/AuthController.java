@@ -12,6 +12,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+
 @RestController
 @RequestMapping("api/v1/auth")
 public class AuthController {
@@ -45,6 +47,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+
+        AppUser user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        user.setLastLoginAt(Instant.now());
+        userRepository.save(user);
 
         String token = jwtUtil.generateToken(request.getEmail());
         return ResponseEntity.ok(token);
