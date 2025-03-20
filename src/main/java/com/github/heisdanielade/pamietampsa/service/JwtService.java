@@ -9,7 +9,7 @@ import java.security.Key;
 import java.util.Date;
 
 @Component
-public class JwtUtil {
+public class JwtService {
 
     @Value("${jwt.secret}")
     private String secretKey; // used to sign and verify jwt tokens

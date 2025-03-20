@@ -1,11 +1,11 @@
 package com.github.heisdanielade.pamietampsa.auth;
 
-import com.github.heisdanielade.pamietampsa.dto.LoginRequest;
-import com.github.heisdanielade.pamietampsa.dto.SignupRequest;
+import com.github.heisdanielade.pamietampsa.dto.LoginUserDto;
+import com.github.heisdanielade.pamietampsa.dto.RegisterUserDto;
 import com.github.heisdanielade.pamietampsa.entity.AppUser;
 import com.github.heisdanielade.pamietampsa.enums.Role;
 import com.github.heisdanielade.pamietampsa.repository.AppUserRepository;
-import com.github.heisdanielade.pamietampsa.util.JwtUtil;
+import com.github.heisdanielade.pamietampsa.service.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,24 +20,24 @@ public class AuthController {
 
     private final AppUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
+    private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthController(AppUserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
+    public AuthController(AppUserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
+        this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody SignupRequest request) {
+    public ResponseEntity<String> register(@RequestBody RegisterUserDto request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("Email already in use");
         }
 
         Role role = Role.USER; // Default role is USER
-        AppUser user = new AppUser(null, request.getEmail(), passwordEncoder.encode(request.getPassword()));
+        AppUser user = new AppUser(request.getEmail(), passwordEncoder.encode(request.getPassword()));
         user.setRole(role);
         userRepository.save(user);
 
@@ -45,14 +45,15 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<String> login(@RequestBody LoginUserDto request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
         AppUser user = userRepository.findByEmail(request.getEmail()).orElseThrow();
         user.setLastLoginAt(Instant.now());
         userRepository.save(user);
 
-        String token = jwtUtil.generateToken(request.getEmail());
-        return ResponseEntity.ok(token);
+//        String token = jwtService.generateToken(request.getEmail());
+//        return ResponseEntity.ok(token);
+        return null;
     }
 }
