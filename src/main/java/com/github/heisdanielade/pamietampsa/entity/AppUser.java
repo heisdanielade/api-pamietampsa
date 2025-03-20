@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -28,7 +29,8 @@ import java.util.List;
 public class AppUser implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "app_user_seq")
+    @SequenceGenerator(name = "app_user_seq", sequenceName = "app_user_seq", allocationSize = 1)
     private Long id;
 
     @Column(unique = true, nullable = false)
@@ -45,6 +47,12 @@ public class AppUser implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private boolean enabled;
+
+    // For email verification
+    private String verificationCode;
+    private LocalDateTime verificationCodeExpiresAt;
+
     @CreationTimestamp
     @Column(updatable = false, nullable = false)
     private Instant createdAt;
@@ -57,14 +65,18 @@ public class AppUser implements UserDetails {
 
     private LocalDate accountExpirationDate = null;
 
-    public AppUser(String email, String username, String password) {
+
+    public AppUser(String email, String password) {
         this.email = email;
-        this.username = username;
         this.password = password;
     }
 
     public Character getInitial(){
-        return this.username.charAt(0);
+        if(this.username != null){
+            return this.username.charAt(0);
+        } else{
+            return this.email.charAt(0);
+        }
     }
 
     @Override
@@ -92,6 +104,6 @@ public class AppUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.enabled;
     }
 }
