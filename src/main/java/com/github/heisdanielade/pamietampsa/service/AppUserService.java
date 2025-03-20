@@ -2,22 +2,24 @@ package com.github.heisdanielade.pamietampsa.service;
 
 import com.github.heisdanielade.pamietampsa.entity.AppUser;
 import com.github.heisdanielade.pamietampsa.repository.AppUserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AppUserService {
-//    private final AppUserRepository appUserRepository;
+    private final AppUserRepository userRepository;
 
-//    @Autowired
-//    public AppUserService(AppUserRepository appUserRepository){
-//        this.appUserRepository = appUserRepository;
-//    }
-//
+    public AppUserService(AppUserRepository userRepository){
+        this.userRepository = userRepository;
+    }
+
+
+    public List<AppUser> allUsers(){
+        return new ArrayList<>(userRepository.findAll());
+    }
 
     // Delete user
     public void deleteAppUser(AppUser appUser){
