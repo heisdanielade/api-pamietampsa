@@ -1,59 +1,59 @@
-package com.github.heisdanielade.pamietampsa.auth;
+package com.github.heisdanielade.pamietampsa.controller;
 
-import com.github.heisdanielade.pamietampsa.dto.LoginUserDto;
-import com.github.heisdanielade.pamietampsa.dto.RegisterUserDto;
+import com.github.heisdanielade.pamietampsa.dto.user.LoginUserDto;
+import com.github.heisdanielade.pamietampsa.dto.user.RegisterUserDto;
+import com.github.heisdanielade.pamietampsa.dto.user.VerifyUserDto;
 import com.github.heisdanielade.pamietampsa.entity.AppUser;
-import com.github.heisdanielade.pamietampsa.enums.Role;
-import com.github.heisdanielade.pamietampsa.repository.AppUserRepository;
+import com.github.heisdanielade.pamietampsa.responses.LoginResponse;
+import com.github.heisdanielade.pamietampsa.service.AuthenticationService;
 import com.github.heisdanielade.pamietampsa.service.JwtService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 
 @RestController
 @RequestMapping("api/v1/auth")
-public class AuthController {
+public class AuthenticationController {
 
-    private final AppUserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationService authenticationService;
 
-    public AuthController(AppUserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
         this.jwtService = jwtService;
-        this.authenticationManager = authenticationManager;
+        this.authenticationService = authenticationService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterUserDto request) {
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("Email already in use");
-        }
-
-        Role role = Role.USER; // Default role is USER
-        AppUser user = new AppUser(request.getEmail(), passwordEncoder.encode(request.getPassword()));
-        user.setRole(role);
-        userRepository.save(user);
-
-        return ResponseEntity.ok("User registered successfully");
+    @PostMapping("/signup")
+    public ResponseEntity<AppUser> register(@RequestBody RegisterUserDto registerUserDto) {
+        AppUser registeredUser = authenticationService.signup(registerUserDto);
+        return ResponseEntity.ok(registeredUser);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginUserDto request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto) {
+        AppUser authenticatedUser = authenticationService.authenticate(loginUserDto);
+        String jwtToken = jwtService.generateToken(authenticatedUser);
+        LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());
+        return ResponseEntity.ok(loginResponse);
+    }
 
-        AppUser user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-        user.setLastLoginAt(Instant.now());
-        userRepository.save(user);
+    @PostMapping("/verify")
+    public ResponseEntity<?> verifyUser(@RequestBody VerifyUserDto verifyUserDto){
+        try{
+            authenticationService.verifyUser(verifyUserDto);
+            return ResponseEntity.ok("Account verified successfully.");
+        } catch(RuntimeException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
-//        String token = jwtService.generateToken(request.getEmail());
-//        return ResponseEntity.ok(token);
-        return null;
+    @PostMapping("/resend-verification-code")
+    public ResponseEntity<?> resendVerificationCode(@RequestBody String email){
+        try{
+            authenticationService.resendVerificationEmail(email);
+            return ResponseEntity.ok("Verification code sent successfully.");
+        } catch(RuntimeException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
