@@ -1,4 +1,4 @@
-package com.github.heisdanielade.pamietampsa.dto;
+package com.github.heisdanielade.pamietampsa.dto.user;
 
 import lombok.Getter;
 import lombok.Setter;
