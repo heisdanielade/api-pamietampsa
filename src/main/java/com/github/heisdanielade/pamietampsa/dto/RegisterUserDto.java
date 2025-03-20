@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SignupRequest {
+public class RegisterUserDto {
 
     @Email(message = "Invalid email format")
     @NotBlank(message = "Email is required")
