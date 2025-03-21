@@ -9,11 +9,14 @@ import com.github.heisdanielade.pamietampsa.exception.auth.*;
 import com.github.heisdanielade.pamietampsa.repository.AppUserRepository;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
@@ -49,7 +52,7 @@ public class AuthenticationService {
                 .orElseThrow(UserNotFoundException::new);
 
         if(!user.isEnabled()){
-            throw new AccountNotVerifiedException();
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Account not verified. Please check your email.");
         }
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -57,8 +60,8 @@ public class AuthenticationService {
                         input.getPassword()
                 )
         );
-        System.out.println("--------------Authenticating");
-
+        user.setLastLoginAt(Instant.now());
+        userRepository.save(user);
         return user;
     }
 

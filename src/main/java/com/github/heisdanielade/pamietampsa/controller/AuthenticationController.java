@@ -1,5 +1,6 @@
 package com.github.heisdanielade.pamietampsa.controller;
 
+import com.github.heisdanielade.pamietampsa.dto.user.EmailRequestDto;
 import com.github.heisdanielade.pamietampsa.dto.user.LoginUserDto;
 import com.github.heisdanielade.pamietampsa.dto.user.RegisterUserDto;
 import com.github.heisdanielade.pamietampsa.dto.user.VerifyUserDto;
@@ -10,9 +11,11 @@ import com.github.heisdanielade.pamietampsa.service.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+
 
 @RestController
-@RequestMapping("api/v1/auth")
+@RequestMapping(path = "/api/v1/auth")
 public class AuthenticationController {
 
     private final JwtService jwtService;
@@ -23,13 +26,13 @@ public class AuthenticationController {
         this.authenticationService = authenticationService;
     }
 
-    @PostMapping("/signup")
+    @PostMapping(path ="/signup")
     public ResponseEntity<AppUser> register(@RequestBody RegisterUserDto registerUserDto) {
         AppUser registeredUser = authenticationService.signup(registerUserDto);
         return ResponseEntity.ok(registeredUser);
     }
 
-    @PostMapping("/login")
+    @PostMapping(path = "/login")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto) {
         AppUser authenticatedUser = authenticationService.authenticate(loginUserDto);
         String jwtToken = jwtService.generateToken(authenticatedUser);
@@ -37,7 +40,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(loginResponse);
     }
 
-    @PostMapping("/verify")
+    @PostMapping(path = "/verify")
     public ResponseEntity<?> verifyUser(@RequestBody VerifyUserDto verifyUserDto){
         try{
             authenticationService.verifyUser(verifyUserDto);
@@ -47,12 +50,14 @@ public class AuthenticationController {
         }
     }
 
-    @PostMapping("/resend-verification-code")
-    public ResponseEntity<?> resendVerificationCode(@RequestBody String email){
+    @PostMapping("path = /resend-verification")
+    public ResponseEntity<?> resendVerificationCode(@RequestBody EmailRequestDto emailRequestDto){
+        String email = emailRequestDto.getEmail();
         try{
             authenticationService.resendVerificationEmail(email);
-            return ResponseEntity.ok("Verification code sent successfully.");
+            return ResponseEntity.ok("Verification code has been sent.");
         } catch(RuntimeException e){
+            System.out.println("=============" + email + " not found");
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

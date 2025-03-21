@@ -88,6 +88,8 @@ public class AppUser implements UserDetails {
 
     @Override
     public String getUsername() {
+        // Returning email fixed "login 403 forbidden error" whereby spring was
+        // recognizing an empty string "" as the auth input instead of actual user email
         return this.email;
     }
 
