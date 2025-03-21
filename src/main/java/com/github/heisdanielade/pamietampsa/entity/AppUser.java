@@ -36,7 +36,7 @@ public class AppUser implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
-    private String username;
+    private String name;
 
     @Transient
     private Character initial;
@@ -44,9 +44,11 @@ public class AppUser implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @Column
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column
     private boolean enabled;
 
     // For email verification
@@ -72,8 +74,8 @@ public class AppUser implements UserDetails {
     }
 
     public Character getInitial(){
-        if(this.username != null){
-            return this.username.charAt(0);
+        if(this.name != null){
+            return this.name.charAt(0);
         } else{
             return this.email.charAt(0);
         }
@@ -82,6 +84,11 @@ public class AppUser implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
     }
 
     @Override
