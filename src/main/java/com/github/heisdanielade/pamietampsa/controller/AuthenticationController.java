@@ -38,7 +38,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(loginResponse);
     }
 
-    @PostMapping(path = "/verify")
+    @PostMapping(path = "/verify-email")
     public ResponseEntity<?> verifyUser(@RequestBody VerifyUserDto verifyUserDto){
         try{
             authenticationService.verifyUser(verifyUserDto);
