@@ -37,7 +37,7 @@ public class AuthenticationService {
 
         AppUser user = new AppUser(input.getEmail(), passwordEncoder.encode(input.getPassword()));
         user.setVerificationCode(generateVerificationCode());
-        user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
+        user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(10));
         user.setEnabled(false);
         user.setRole(Role.USER); // Default role
         sendVerificationEmail(user);
@@ -119,7 +119,7 @@ public class AuthenticationService {
                 throw new AccountAlreadyVerifiedException();
             }
             user.setVerificationCode(generateVerificationCode());
-            user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
+            user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(5));
             sendVerificationEmail(user);
             userRepository.save(user);
         } else {
