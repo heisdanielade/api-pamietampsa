@@ -56,10 +56,12 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
 
+        String frontEndDevelopmentURL = "http://localhost:3000";
         String developmentURL = "http://localhost:8080";
         String productionURL = "https://pamietampsa.netlify.app";
 
         configuration.setAllowedOrigins(List.of(
+                frontEndDevelopmentURL,
                 developmentURL,
                 productionURL
         ));
