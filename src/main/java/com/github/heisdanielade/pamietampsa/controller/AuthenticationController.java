@@ -5,13 +5,11 @@ import com.github.heisdanielade.pamietampsa.dto.user.LoginUserDto;
 import com.github.heisdanielade.pamietampsa.dto.user.RegisterUserDto;
 import com.github.heisdanielade.pamietampsa.dto.user.VerifyUserDto;
 import com.github.heisdanielade.pamietampsa.entity.AppUser;
-import com.github.heisdanielade.pamietampsa.responses.LoginResponse;
+import com.github.heisdanielade.pamietampsa.response.LoginResponse;
 import com.github.heisdanielade.pamietampsa.service.AuthenticationService;
 import com.github.heisdanielade.pamietampsa.service.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.Instant;
 
 
 @RestController

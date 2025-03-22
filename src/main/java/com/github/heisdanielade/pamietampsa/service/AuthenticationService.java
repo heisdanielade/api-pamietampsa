@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDate;
 import java.util.Optional;
 import java.util.Random;
 
@@ -39,7 +37,7 @@ public class AuthenticationService {
 
         AppUser user = new AppUser(input.getEmail(), passwordEncoder.encode(input.getPassword()));
         user.setVerificationCode(generateVerificationCode());
-        user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(30));
+        user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
         user.setEnabled(false);
         user.setRole(Role.USER); // Default role
         sendVerificationEmail(user);
@@ -121,7 +119,7 @@ public class AuthenticationService {
                 throw new AccountAlreadyVerifiedException();
             }
             user.setVerificationCode(generateVerificationCode());
-            user.setVerificationCodeExpiresAt(LocalDateTime.now().plusHours(1));
+            user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
             sendVerificationEmail(user);
             userRepository.save(user);
         } else {
@@ -131,7 +129,7 @@ public class AuthenticationService {
 
     private String generateVerificationCode() {
         Random random = new Random();
-        int code = random.nextInt(900000) + 100000;
+        int code = random.nextInt(9000) + 1000;
         return String.valueOf(code);
     }
 
