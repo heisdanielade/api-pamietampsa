@@ -1,6 +1,7 @@
 package com.github.heisdanielade.pamietampsa.config;
 
 import com.github.heisdanielade.pamietampsa.util.JwtAuthenticationFilter;
+import org.apache.catalina.filters.CorsFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -21,8 +22,8 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    private final List<String> allowedRESTMethods = List.of("GET", "POST", "PUT", "DELETE");
-    private final List<String> allowedRequestHeaders = List.of("Authorization", "Content-Type");
+    private final List<String> allowedRESTMethods = List.of("GET", "POST", "PUT", "DELETE", "OPTIONS");
+    private final List<String> allowedRequestHeaders = List.of("Authorization", "Content-Type", "Origin", "Accept", "X-Requested-With");
 
 
     private final AuthenticationProvider authenticationProvider;
@@ -56,6 +57,8 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
 
+        System.out.println(System.lineSeparator() + "==========Loading CorsConfiguration" + System.lineSeparator());
+
         String frontEndDevelopmentURL = "http://localhost:3000";
         String developmentURL = "http://localhost:8080";
         String productionURL = "https://pamietampsa.netlify.app";
@@ -67,6 +70,7 @@ public class SecurityConfiguration {
         ));
         configuration.setAllowedMethods(this.allowedRESTMethods);
         configuration.setAllowedHeaders(this.allowedRequestHeaders);
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
