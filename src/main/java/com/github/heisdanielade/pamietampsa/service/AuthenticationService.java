@@ -107,7 +107,7 @@ public class AuthenticationService {
         try {
             emailService.sendVerificationEmail(user.getEmail(), subject, htmlMessage);
         } catch (MessagingException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -129,7 +129,7 @@ public class AuthenticationService {
 
     private String generateVerificationCode() {
         Random random = new Random();
-        int code = random.nextInt(9000) + 1000;
+        int code = random.nextInt(900000) + 100000; // Six-digit code
         return String.valueOf(code);
     }
 
