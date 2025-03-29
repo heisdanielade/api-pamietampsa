@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController()
-@RequestMapping(path = "/api/v1")
 @RequiredArgsConstructor
+@RequestMapping(path = "/api/v1")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AppUserController {
 
     private final AppUserService appUserService;
