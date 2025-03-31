@@ -32,6 +32,8 @@ build/
 ### VS Code ###
 .vscode/
 
-### Env ###
+### Others ###
 .env
+
+run.bat
 application.yml
