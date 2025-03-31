@@ -1,4 +1,4 @@
-package com.github.heisdanielade.pamietampsa.response;
+package com.github.heisdanielade.pamietampsa.response.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

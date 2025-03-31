@@ -5,7 +5,8 @@ import com.github.heisdanielade.pamietampsa.dto.user.LoginUserDto;
 import com.github.heisdanielade.pamietampsa.dto.user.RegisterUserDto;
 import com.github.heisdanielade.pamietampsa.dto.user.VerifyUserDto;
 import com.github.heisdanielade.pamietampsa.entity.AppUser;
-import com.github.heisdanielade.pamietampsa.response.LoginResponse;
+import com.github.heisdanielade.pamietampsa.response.auth.LoginResponse;
+import com.github.heisdanielade.pamietampsa.response.auth.RegisterResponse;
 import com.github.heisdanielade.pamietampsa.service.AuthenticationService;
 import com.github.heisdanielade.pamietampsa.service.JwtService;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +27,10 @@ public class AuthenticationController {
     }
 
     @PostMapping(path ="/signup")
-    public ResponseEntity<AppUser> register(@RequestBody RegisterUserDto registerUserDto) {
+    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterUserDto registerUserDto) {
         AppUser registeredUser = authenticationService.signup(registerUserDto);
-        return ResponseEntity.ok(registeredUser);
+        RegisterResponse registerResponse = new RegisterResponse(registeredUser.getEmail(), registeredUser.getRole());
+        return ResponseEntity.ok(registerResponse);
     }
 
     @PostMapping(path = "/login")
