@@ -36,5 +36,4 @@ build/
 .env
 
 run.bat
-application.yml
 application-dev.yml

@@ -1,0 +1,34 @@
+
+spring:
+  application:
+    name: pamietampsa
+  datasource:
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    database: postgresql
+  mail:
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  config:
+    import: optional:file:.env
+
+server:
+  error:
+    include-message: always
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG

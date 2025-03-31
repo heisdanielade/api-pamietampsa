@@ -12,25 +12,12 @@ spring:
     port: 587
     username: ${SUPPORT_EMAIL}
     password: ${APP_PASSWORD}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
 
   config:
     activate:
       on-profile: prod
-    import: optional:file:.env # For env variables
 
 # Jwt info
 jwt:
   secret-key: ${JWT_SECRET_KEY}
   expiration-time: ${JWT_EXPIRATION_TIME}
-
-logging:
-  level:
-    org:
-      springframework:
-        security: DEBUG
