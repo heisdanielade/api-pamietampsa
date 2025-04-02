@@ -8,10 +8,13 @@ spring:
     password: ${PGPASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
+    hibernate:
+      ddl-auto: update
     properties:
       hibernate:
-        ddl-auto: update
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: true
+        format_sql: true
   mail:
     host: smtp.gmail.com
     port: 587
