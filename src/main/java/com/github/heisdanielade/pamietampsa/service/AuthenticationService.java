@@ -75,7 +75,7 @@ public class AuthenticationService {
             // the verificationCode attribute is set to null upon verification.
             throw new AccountAlreadyVerifiedException();
         }
-        if(user.getVerificationCodeExpiresAt().isBefore(LocalDateTime.now())){
+        if(user.getVerificationCodeExpiresAt() == null || user.getVerificationCodeExpiresAt().isBefore(LocalDateTime.now())){
             throw new ExpiredVerificationCodeException();
         }
         if(!user.getVerificationCode().equals(input.getOtp())){
@@ -84,6 +84,7 @@ public class AuthenticationService {
             user.setEnabled(true);
             user.setVerificationCode(null); // Verification code no longer needed
             user.setVerificationCodeExpiresAt(null);
+            userRepository.save(user);
         }
     }
 
