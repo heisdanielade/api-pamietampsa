@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping(path = "/api/v1/auth")
-@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping(path = "/v1/auth")
+@CrossOrigin(origins = {"http://localhost:3000", "https://pamietampsa.netlify.app"})
 public class AuthenticationController {
 
     private final JwtService jwtService;

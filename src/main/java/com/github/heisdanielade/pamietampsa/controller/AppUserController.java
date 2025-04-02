@@ -3,7 +3,6 @@ package com.github.heisdanielade.pamietampsa.controller;
 import com.github.heisdanielade.pamietampsa.entity.AppUser;
 import com.github.heisdanielade.pamietampsa.service.AppUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,8 +12,8 @@ import java.util.List;
 
 @RestController()
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/v1")
-@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping(path = "/v1")
+@CrossOrigin(origins = {"http://localhost:3000", "https://pamietampsa.netlify.app"})
 public class AppUserController {
 
     private final AppUserService appUserService;
