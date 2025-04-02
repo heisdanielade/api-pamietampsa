@@ -60,13 +60,16 @@ public class SecurityConfiguration {
         System.out.println(System.lineSeparator() + "==========Loading CorsConfiguration" + System.lineSeparator());
 
         String frontEndDevelopmentURL = "http://localhost:3000";
-        String developmentURL = "http://localhost:8080";
-        String productionURL = "https://pamietampsa.netlify.app";
+        String frontEndProductionURL = "https://pamietampsa.netlify.app";
+
+        String backendDevelopmentURL = "http://localhost:8080";
+        String backendProductionURL = "https://api-pamietampsa.up.railway.app";
 
         configuration.setAllowedOrigins(List.of(
                 frontEndDevelopmentURL,
-                developmentURL,
-                productionURL
+                frontEndProductionURL,
+                backendDevelopmentURL,
+                backendProductionURL
         ));
         configuration.setAllowedMethods(this.allowedRESTMethods);
         configuration.setAllowedHeaders(this.allowedRequestHeaders);
