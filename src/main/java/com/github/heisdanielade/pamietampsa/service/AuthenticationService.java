@@ -80,12 +80,11 @@ public class AuthenticationService {
         }
         if(!user.getVerificationCode().equals(input.getOtp())){
             throw new InvalidVerificationCodeException();
+        } else{
+            user.setEnabled(true);
+            user.setVerificationCode(null); // Verification code no longer needed
+            user.setVerificationCodeExpiresAt(null);
         }
-        // If all requirements are passed then enable user's account and remove verification code data
-        user.setEnabled(true);
-        user.setVerificationCode(null); // Verification code no longer needed
-        user.setVerificationCodeExpiresAt(null);
-
     }
 
     private void sendVerificationEmail(AppUser user) {
