@@ -13,7 +13,6 @@ import java.util.List;
 @RestController()
 @RequiredArgsConstructor
 @RequestMapping(path = "/v1", produces = "application/json")
-//@CrossOrigin(origins = {"http://localhost:3000", "https://pamietampsa.netlify.app"})
 public class AppUserController {
 
     private final AppUserService appUserService;
