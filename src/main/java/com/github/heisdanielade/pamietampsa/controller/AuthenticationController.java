@@ -5,17 +5,19 @@ import com.github.heisdanielade.pamietampsa.dto.user.LoginUserDto;
 import com.github.heisdanielade.pamietampsa.dto.user.RegisterUserDto;
 import com.github.heisdanielade.pamietampsa.dto.user.VerifyUserDto;
 import com.github.heisdanielade.pamietampsa.entity.AppUser;
-import com.github.heisdanielade.pamietampsa.response.auth.LoginResponse;
-import com.github.heisdanielade.pamietampsa.response.auth.RegisterResponse;
+import com.github.heisdanielade.pamietampsa.response.ApiResponse;
 import com.github.heisdanielade.pamietampsa.service.AuthenticationService;
 import com.github.heisdanielade.pamietampsa.service.JwtService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 @RestController
-@RequestMapping(path = "/v1/auth")
-@CrossOrigin(origins = {"http://localhost:3000", "https://pamietampsa.netlify.app"})
+@RequestMapping(path = "/v1/auth", produces = "application/json")
 public class AuthenticationController {
 
     private final JwtService jwtService;
@@ -27,39 +29,61 @@ public class AuthenticationController {
     }
 
     @PostMapping(path ="/signup")
-    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterUserDto registerUserDto) {
-        AppUser registeredUser = authenticationService.signup(registerUserDto);
-        RegisterResponse registerResponse = new RegisterResponse(registeredUser.getEmail(), registeredUser.getRole());
-        return ResponseEntity.ok(registerResponse);
+    public ResponseEntity<ApiResponse<Map<String, Object>>> register(@RequestBody RegisterUserDto input) {
+        AppUser registeredUser = authenticationService.signup(input);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("email", registeredUser.getEmail());
+        data.put("role", registeredUser.getRole());
+        data.put("enabled", registeredUser.isEnabled());
+
+        ApiResponse<Map<String, Object>> response = new ApiResponse<>(
+                HttpStatus.CREATED.value(),
+                "User registered successfully. Proceed to email verification.",
+                data
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping(path = "/login")
-    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto) {
-        AppUser authenticatedUser = authenticationService.authenticate(loginUserDto);
+    public ResponseEntity<ApiResponse<Map<String, Object>>> authenticate(@RequestBody LoginUserDto input) {
+        AppUser authenticatedUser = authenticationService.authenticate(input);
+
         String jwtToken = jwtService.generateToken(authenticatedUser);
-        LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());
-        return ResponseEntity.ok(loginResponse);
+        Map<String, Object> data = new HashMap<>();
+        data.put("token", jwtToken);
+        data.put("expirationTime", jwtService.getExpirationTime());
+
+        ApiResponse<Map<String, Object>> response = new ApiResponse<>(
+                HttpStatus.CREATED.value(),
+                "User authenticated successfully.",
+                data
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping(path = "/verify-email")
-    public ResponseEntity<?> verifyUser(@RequestBody VerifyUserDto verifyUserDto){
-        try{
-            authenticationService.verifyUser(verifyUserDto);
-            return ResponseEntity.ok("Account verified successfully.");
-        } catch(RuntimeException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<ApiResponse<Map<String, Object>>> verifyUser(@RequestBody VerifyUserDto input){
+        authenticationService.verifyUser(input);
+        ApiResponse<Map<String, Object>> response = new ApiResponse<>(
+                HttpStatus.OK.value(),
+                "Email verified successfully."
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("path = /resend-verification")
-    public ResponseEntity<?> resendVerificationCode(@RequestBody EmailRequestDto emailRequestDto){
-        String email = emailRequestDto.getEmail();
-        try{
-            authenticationService.resendVerificationEmail(email);
-            return ResponseEntity.ok("Verification code has been sent.");
-        } catch(RuntimeException e){
-            System.out.println("=============" + email + " not found");
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @PostMapping(path = "/resend-verification")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> resendVerificationCode(@RequestBody EmailRequestDto input){
+        String email = input.getEmail();
+        authenticationService.resendVerificationEmail(email);
+        ApiResponse<Map<String, Object>> response = new ApiResponse<>(
+                HttpStatus.OK.value(),
+                "Email verification code sent successfully."
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
