@@ -9,17 +9,16 @@ import com.github.heisdanielade.pamietampsa.exception.auth.*;
 import com.github.heisdanielade.pamietampsa.repository.AppUserRepository;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
+
 
 @Service
 @RequiredArgsConstructor
@@ -32,9 +31,8 @@ public class AuthenticationService {
 
     public AppUser signup(RegisterUserDto input){
         if (userRepository.findByEmail(input.getEmail()).isPresent()) {
-            throw new EmailAlreadyInUseException();
+            throw new AccountAlreadyExistsException();
         }
-
         AppUser user = new AppUser(input.getEmail(), passwordEncoder.encode(input.getPassword()));
         user.setVerificationCode(generateVerificationCode());
         user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(10));
@@ -42,15 +40,17 @@ public class AuthenticationService {
         user.setRole(Role.USER); // Default role
         sendVerificationEmail(user);
 
-        return userRepository.save(user);
+        userRepository.save(user);
+        return user;
     }
+
 
     public AppUser authenticate(LoginUserDto input){
         AppUser user = userRepository.findByEmail(input.getEmail())
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(AccountNotFoundException::new);
 
         if(!user.isEnabled()){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Account not verified. Please check your email.");
+            throw new AccountNotVerifiedException();
         }
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -63,11 +63,12 @@ public class AuthenticationService {
         return user;
     }
 
+
     public void verifyUser(VerifyUserDto input){
         Optional<AppUser> optionalUser = userRepository.findByEmail(input.getEmail());
 
         if(optionalUser.isEmpty()){
-            throw new UserNotFoundException();
+            throw new AccountNotFoundException();
         }
         AppUser user = optionalUser.get();
         if(user.getVerificationCode() == null){
@@ -87,6 +88,7 @@ public class AuthenticationService {
             userRepository.save(user);
         }
     }
+
 
     private void sendVerificationEmail(AppUser user) {
         String subject = "Account Verification";
@@ -123,7 +125,7 @@ public class AuthenticationService {
             sendVerificationEmail(user);
             userRepository.save(user);
         } else {
-            throw new UserNotFoundException();
+            throw new AccountNotFoundException();
         }
     }
 
