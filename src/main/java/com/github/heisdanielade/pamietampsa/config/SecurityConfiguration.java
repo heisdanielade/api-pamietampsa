@@ -5,6 +5,7 @@ import org.apache.catalina.filters.CorsFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -41,6 +42,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/v1/auth/**", "/v1/hello").permitAll()
                         .anyRequest().authenticated()
@@ -57,7 +59,7 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
 
-        System.out.println(System.lineSeparator() + "==========Loading CorsConfiguration" + System.lineSeparator());
+        System.out.println(System.lineSeparator() + "============ Loading Cors Configuration" + System.lineSeparator());
 
         String frontEndDevelopmentURL = "http://localhost:3000";
         String frontEndProductionURL = "https://pamietampsa.netlify.app";
