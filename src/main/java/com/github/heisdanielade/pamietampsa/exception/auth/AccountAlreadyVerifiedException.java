@@ -1,7 +1,13 @@
 package com.github.heisdanielade.pamietampsa.exception.auth;
 
-public class AccountAlreadyVerifiedException extends AuthenticationException{
+import com.github.heisdanielade.pamietampsa.exception.AuthenticationException;
+
+public class AccountAlreadyVerifiedException extends AuthenticationException {
     public AccountAlreadyVerifiedException() {
-        super("Account has already been verified.");
+        super("Email already verified.");
+    }
+
+    public AccountAlreadyVerifiedException(String message) {
+        super(message);
     }
 }
