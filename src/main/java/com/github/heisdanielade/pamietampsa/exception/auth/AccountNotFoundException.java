@@ -1,8 +1,8 @@
 package com.github.heisdanielade.pamietampsa.exception.auth;
 
-import com.github.heisdanielade.pamietampsa.exception.AuthenticationException;
+import com.github.heisdanielade.pamietampsa.exception.CustomAuthenticationException;
 
-public class AccountNotFoundException extends AuthenticationException {
+public class AccountNotFoundException extends CustomAuthenticationException {
     public AccountNotFoundException() {
         super("Account does not exist.");
     }

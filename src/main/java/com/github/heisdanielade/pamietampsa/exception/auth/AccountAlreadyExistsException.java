@@ -1,8 +1,8 @@
 package com.github.heisdanielade.pamietampsa.exception.auth;
 
-import com.github.heisdanielade.pamietampsa.exception.AuthenticationException;
+import com.github.heisdanielade.pamietampsa.exception.CustomAuthenticationException;
 
-public class AccountAlreadyExistsException extends AuthenticationException {
+public class AccountAlreadyExistsException extends CustomAuthenticationException {
     public AccountAlreadyExistsException() {
         super("Account already exists.");
     }
