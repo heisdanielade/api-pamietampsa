@@ -11,6 +11,7 @@ import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -49,15 +50,21 @@ public class AuthenticationService {
         AppUser user = userRepository.findByEmail(input.getEmail())
                 .orElseThrow(AccountNotFoundException::new);
 
+        try{
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            input.getEmail(),
+                            input.getPassword()
+                    )
+            );
+        } catch (AuthenticationException e) {
+            throw new InvalidLoginCredentialsException();
+        }
+
         if(!user.isEnabled()){
             throw new AccountNotVerifiedException();
         }
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        input.getEmail(),
-                        input.getPassword()
-                )
-        );
+
         user.setLastLoginAt(Instant.now());
         userRepository.save(user);
         return user;
