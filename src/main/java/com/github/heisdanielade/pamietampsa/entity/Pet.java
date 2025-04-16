@@ -28,6 +28,9 @@ public class Pet {
     private String breed;
     private LocalDate birthDate;
 
+    @Transient
+    private Integer age;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "app_user_id", nullable = false)
     private AppUser owner;
@@ -39,4 +42,15 @@ public class Pet {
 
     @UpdateTimestamp
     private Instant updatedAt;
+
+    public Pet(String name, String species, String breed, LocalDate birthDate){
+        this.name = name;
+        this.species = species;
+        this.breed = breed;
+        this.birthDate = birthDate;
+    }
+
+    public Integer getAge(){
+        return LocalDate.now().getYear() - this.birthDate.getYear();
+    }
 }
