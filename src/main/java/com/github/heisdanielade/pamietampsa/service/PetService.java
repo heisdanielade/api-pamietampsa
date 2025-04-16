@@ -1,5 +1,6 @@
 package com.github.heisdanielade.pamietampsa.service;
 
+import com.github.heisdanielade.pamietampsa.dto.pet.AddPetDto;
 import com.github.heisdanielade.pamietampsa.entity.AppUser;
 import com.github.heisdanielade.pamietampsa.entity.Pet;
 import com.github.heisdanielade.pamietampsa.exception.auth.AccountNotFoundException;
@@ -19,10 +20,11 @@ public class PetService {
         this.appUserRepository = appUserRepository;
     }
 
-    public Pet addPetToUser(String userEmail, Pet pet){
+    public Pet addPetToUser(String userEmail, AddPetDto input){
         AppUser user = appUserRepository.findByEmail(userEmail)
                 .orElseThrow(AccountNotFoundException::new);
 
+        Pet pet = new Pet(input.getName(), input.getSpecies(), input.getBreed(), input.getBirthDate());
         pet.setOwner(user);
         return petRepository.save(pet);
     }
