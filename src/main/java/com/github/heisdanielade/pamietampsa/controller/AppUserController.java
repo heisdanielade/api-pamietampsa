@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController()
+@RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/v1", produces = "application/json")
 public class AppUserController {
