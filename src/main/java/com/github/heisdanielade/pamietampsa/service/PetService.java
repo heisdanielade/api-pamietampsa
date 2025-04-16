@@ -30,7 +30,7 @@ public class PetService {
     public List<Pet> getPetsForUser(String userEmail){
         AppUser user = appUserRepository.findByEmail(userEmail)
                 .orElseThrow(AccountNotFoundException::new);
-        
+
         return petRepository.findByOwner(user);
     }
 }

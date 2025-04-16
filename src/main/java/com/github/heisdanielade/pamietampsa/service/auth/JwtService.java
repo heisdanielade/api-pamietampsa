@@ -1,4 +1,4 @@
-package com.github.heisdanielade.pamietampsa.service;
+package com.github.heisdanielade.pamietampsa.service.auth;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;

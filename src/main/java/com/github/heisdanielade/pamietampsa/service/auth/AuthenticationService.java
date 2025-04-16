@@ -1,4 +1,4 @@
-package com.github.heisdanielade.pamietampsa.service;
+package com.github.heisdanielade.pamietampsa.service.auth;
 
 import com.github.heisdanielade.pamietampsa.dto.user.LoginUserDto;
 import com.github.heisdanielade.pamietampsa.dto.user.RegisterUserDto;
@@ -7,6 +7,7 @@ import com.github.heisdanielade.pamietampsa.entity.AppUser;
 import com.github.heisdanielade.pamietampsa.enums.Role;
 import com.github.heisdanielade.pamietampsa.exception.auth.*;
 import com.github.heisdanielade.pamietampsa.repository.AppUserRepository;
+import com.github.heisdanielade.pamietampsa.service.EmailService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
