@@ -16,6 +16,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -94,30 +97,33 @@ public class AuthenticationService {
             user.setVerificationCode(null); // Verification code no longer needed
             user.setVerificationCodeExpiresAt(null);
             userRepository.save(user);
+
+            String subject = "Welcome to PamietamPsa!";
+
+            try {
+                String htmlMessage = new String(Files.readAllBytes(Paths.get("src/main/resources/templates/email/account/registration.html")));
+                emailService.sendVerificationEmail(user.getEmail(), subject, htmlMessage);
+            } catch (IOException e){
+                System.out.println("(e) Error loading email template: " + e.getMessage());
+            } catch (MessagingException e) {
+                System.out.println("(e) Error sending email: " + e.getMessage());
+            }
         }
     }
 
 
     private void sendVerificationEmail(AppUser user) {
-        String subject = "Account Verification";
+        String subject = "Email Verification";
         String verificationCode = user.getVerificationCode();
-        String htmlMessage = "<html>"
-                + "<body style=\"font-family: Arial, sans-serif;\">"
-                + "<div style=\"background-color: #f5f5f5; padding: 20px;\">"
-                + "<h2 style=\"color: #333;\">Welcome to PamietamPsa!</h2>"
-                + "<p style=\"font-size: 16px;\">Please enter the verification code below to continue:</p>"
-                + "<div style=\"background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);\">"
-                + "<h3 style=\"color: #333;\">Verification Code:</h3>"
-                + "<p style=\"font-size: 18px; font-weight: bold; color: #007bff;\">" + verificationCode + "</p>"
-                + "</div>"
-                + "</div>"
-                + "</body>"
-                + "</html>";
 
         try {
+            String template = new String(Files.readAllBytes(Paths.get("src/main/resources/templates/email/auth/email-verification.html")));
+            String htmlMessage = template.replace("{{verification_code}}", verificationCode);
             emailService.sendVerificationEmail(user.getEmail(), subject, htmlMessage);
+        } catch (IOException e){
+            System.out.println("(e) Error loading email template: " + e.getMessage());
         } catch (MessagingException e) {
-            System.out.println(e.getMessage());
+            System.out.println("(e) Error sending email: " + e.getMessage());
         }
     }
 
