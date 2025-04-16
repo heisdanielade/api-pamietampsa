@@ -3,10 +3,7 @@ package com.github.heisdanielade.pamietampsa.entity;
 
 import com.github.heisdanielade.pamietampsa.enums.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,16 +13,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Builder
+@Getter
+@Setter
 @Entity
-@Table
+@Table(name = "app_user")
 public class AppUser implements UserDetails {
 
     @Id
@@ -67,6 +66,9 @@ public class AppUser implements UserDetails {
 
     private LocalDate accountExpirationDate = null;
 
+    //  Pets owned by user
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Pet> pets = new ArrayList<>();
 
     public AppUser(String email, String password) {
         this.email = email;
