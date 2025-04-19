@@ -43,7 +43,6 @@ public class AppUserController {
     }
 
 
-
     @GetMapping("/users/all")
     public ResponseEntity<List<AppUser>> allUsers(){
         List<AppUser> users = appUserService.allUsers();

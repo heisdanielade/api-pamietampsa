@@ -42,7 +42,6 @@ public class AuthenticationController {
                 "User registered successfully. Proceed to email verification.",
                 data
         );
-
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 

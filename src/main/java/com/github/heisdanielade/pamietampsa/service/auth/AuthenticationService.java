@@ -113,8 +113,8 @@ public class AuthenticationService {
 
 
     private void sendVerificationEmail(AppUser user) {
-        String subject = "Email Verification";
         String verificationCode = user.getVerificationCode();
+        String subject = verificationCode + " is your verification code";
 
         try {
             String template = new String(Files.readAllBytes(Paths.get("src/main/resources/templates/email/auth/email-verification.html")));
