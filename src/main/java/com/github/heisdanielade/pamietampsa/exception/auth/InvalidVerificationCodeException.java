@@ -1,8 +1,8 @@
 package com.github.heisdanielade.pamietampsa.exception.auth;
 
-import com.github.heisdanielade.pamietampsa.exception.CustomAuthenticationException;
+import com.github.heisdanielade.pamietampsa.exception.CustomException;
 
-public class InvalidVerificationCodeException extends CustomAuthenticationException {
+public class InvalidVerificationCodeException extends CustomException {
     public InvalidVerificationCodeException() {
         super("Invalid Verification code.");
     }
