@@ -23,10 +23,8 @@ public class AppUserService {
 
     // Delete user
     public void deleteAppUser(AppUser appUser){
-        // Set the account expiration date to 2 weeks timer
+        // Set the account expiration date to a 2-week timer
         appUser.setAccountExpirationDate(LocalDate.now().plusDays(14));
     }
-
-
 
 }

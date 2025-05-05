@@ -1,6 +1,5 @@
 package com.github.heisdanielade.pamietampsa.controller;
 
-
 import com.github.heisdanielade.pamietampsa.dto.pet.AddPetDto;
 import com.github.heisdanielade.pamietampsa.entity.Pet;
 import com.github.heisdanielade.pamietampsa.response.ApiResponse;
@@ -8,10 +7,7 @@ import com.github.heisdanielade.pamietampsa.service.PetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.HashMap;
@@ -38,7 +34,21 @@ public class PetController {
                 "Pet added for user successfully",
                 data
         );
-
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping(path = "/all")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> getAllPets(Principal principal){
+        String userEmail = principal.getName();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("pets", petService.getPetsForUser(userEmail));
+
+        ApiResponse<Map<String, Object>> response = new ApiResponse<>(
+                HttpStatus.OK.value(),
+                "All pets for current user.",
+                data
+        );
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

@@ -66,7 +66,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
     }
 
-    // Email attached to the Account is already verified, therefore user isEnabled = true
+    // Email attached to the Account is already verified; therefore, user isEnabled = true
     @ExceptionHandler(AccountAlreadyVerifiedException.class)
     public ResponseEntity<Map<String, Object>> handleAccountAlreadyVerifiedException(AccountAlreadyVerifiedException ex){
         Map<String, Object>  body = new HashMap<>();
