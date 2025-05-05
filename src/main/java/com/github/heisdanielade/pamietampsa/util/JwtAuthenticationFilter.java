@@ -1,11 +1,13 @@
 package com.github.heisdanielade.pamietampsa.util;
 
+import com.github.heisdanielade.pamietampsa.service.auth.CustomUserDetailsService;
 import com.github.heisdanielade.pamietampsa.service.auth.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,11 +26,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
     private final HandlerExceptionResolver handlerExceptionResolver;
 
     private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
 
     public JwtAuthenticationFilter(
             JwtService jwtService,
-            UserDetailsService userDetailsService,
+            CustomUserDetailsService userDetailsService,
             HandlerExceptionResolver handlerExceptionResolver
     ){
         this.jwtService = jwtService;
@@ -45,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
         final String authHeader = request.getHeader("Authorization");
         System.out.println("============ JWT Filter Executing"); // Debug log
 
-//        Check if header is missing or incorrect
+//        Check if the header is missing or incorrect
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
             filterChain.doFilter(request, response);
             return;
