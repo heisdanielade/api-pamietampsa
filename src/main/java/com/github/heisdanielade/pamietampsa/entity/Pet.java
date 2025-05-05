@@ -8,13 +8,14 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Entity
 @Builder
 @Getter
 @Setter
-@Table
+@Table()
+@NoArgsConstructor
+@AllArgsConstructor
 public class Pet {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pet_seq")
@@ -24,6 +25,7 @@ public class Pet {
     @Column(nullable = false)
     private String name;
 
+    private String petProfileImageURL = "some-placeholder-image";
     private String species;
     private String breed;
     private LocalDate birthDate;
@@ -50,7 +52,17 @@ public class Pet {
         this.birthDate = birthDate;
     }
 
+    public Pet(String name, String species, String breed){
+        this.name = name;
+        this.species = species;
+        this.breed = breed;
+    }
+
     public Integer getAge(){
-        return LocalDate.now().getYear() - this.birthDate.getYear();
+        if(this.birthDate != null){
+            return LocalDate.now().getYear() - this.birthDate.getYear();
+        } else{
+            return -1;
+        }
     }
 }
