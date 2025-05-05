@@ -1,6 +1,7 @@
 package com.github.heisdanielade.pamietampsa.exception;
 
 import com.github.heisdanielade.pamietampsa.exception.auth.*;
+import com.github.heisdanielade.pamietampsa.exception.pet.PetAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,7 +14,15 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Account with provided email already exist in the system
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> handleOtherExceptions(Exception ex) {
+        Map<String, Object>  body = new HashMap<>();
+        body.put("error", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+        return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // Account with provided email already exists in the system
     @ExceptionHandler(AccountAlreadyExistsException.class)
     public ResponseEntity<Map<String, Object>> handleAccountAlreadyExists(AccountAlreadyExistsException ex){
         Map<String, Object>  body = new HashMap<>();
@@ -46,7 +55,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
     }
 
-    // Email attached to the Account is not verified therefore user isEnabled = false
+    // Email attached to the Account is not verified, therefore, user isEnabled = false
     @ExceptionHandler(AccountNotVerifiedException.class)
     public ResponseEntity<Map<String, Object>> handleAccountNotVerifiedException(AccountNotVerifiedException ex){
         Map<String, Object>  body = new HashMap<>();
@@ -57,7 +66,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
     }
 
-    // Email attached to the Account is already verified therefore user isEnabled = true
+    // Email attached to the Account is already verified, therefore user isEnabled = true
     @ExceptionHandler(AccountAlreadyVerifiedException.class)
     public ResponseEntity<Map<String, Object>> handleAccountAlreadyVerifiedException(AccountAlreadyVerifiedException ex){
         Map<String, Object>  body = new HashMap<>();
@@ -90,4 +99,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
+
+
+    // ===========================================================================
+
+    // Pet for provided user already exists in the system
+    @ExceptionHandler(PetAlreadyExistsException.class)
+    public ResponseEntity<Map<String, Object>> handlePetAlreadyExists(PetAlreadyExistsException ex){
+        Map<String, Object>  body = new HashMap<>();
+        body.put("status", HttpStatus.CONFLICT.value());
+        body.put("error", "Conflict");
+        body.put("message", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+    }
 }
+
