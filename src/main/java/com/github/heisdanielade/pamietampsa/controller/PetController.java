@@ -23,11 +23,11 @@ public class PetController {
     @PostMapping(path = "/add")
     public ResponseEntity<ApiResponse<Map<String, Object>>> addPet(@RequestBody AddPetDto input, Principal principal){
         String userEmail = principal.getName();
-        Pet savedPet = petService.addPetToUser(userEmail, input);
+        petService.addPetToUser(userEmail, input);
 
         Map<String, Object> data = new HashMap<>();
-        data.put("petName", savedPet.getName());
-        data.put("species", savedPet.getSpecies());
+        data.put("petName", input.getName());
+        data.put("species", input.getSpecies());
 
         ApiResponse<Map<String, Object>> response = new ApiResponse<>(
                 HttpStatus.CREATED.value(),
