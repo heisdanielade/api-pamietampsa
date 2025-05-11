@@ -7,22 +7,23 @@ import com.github.heisdanielade.pamietampsa.exception.auth.AccountNotFoundExcept
 import com.github.heisdanielade.pamietampsa.exception.pet.PetAlreadyExistsException;
 import com.github.heisdanielade.pamietampsa.repository.AppUserRepository;
 import com.github.heisdanielade.pamietampsa.repository.PetRepository;
+import com.github.heisdanielade.pamietampsa.util.EmailSender;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class PetService {
     private final PetRepository petRepository;
     private final AppUserRepository appUserRepository;
+    private final EmailService emailService;
+    private final EmailSender emailSender;
 
-    public PetService(PetRepository petRepository, AppUserRepository appUserRepository) {
-        this.petRepository = petRepository;
-        this.appUserRepository = appUserRepository;
-    }
-
-    public Pet addPetToUser(String userEmail, AddPetDto input){
+    public void addPetToUser(String userEmail, AddPetDto input){
         Optional<Pet> existingPet = petRepository.findByName(input.getName());
         if(existingPet.isPresent()){
             throw new PetAlreadyExistsException();
@@ -32,9 +33,9 @@ public class PetService {
 
         Pet pet = new Pet(input.getName(), input.getSpecies(), input.getBreed(), input.getBirthDate());
         pet.setOwner(user);
-        return petRepository.save(pet);
+        petRepository.save(pet);
+        emailSender.sendPetRegistrationConfirmationEmail(userEmail, pet.getName(), pet.getSpecies());
     }
-
 
     public List<Pet> getPetsForUser(String userEmail){
         AppUser user = appUserRepository.findByEmail(userEmail)

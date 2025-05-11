@@ -8,7 +8,7 @@ import com.github.heisdanielade.pamietampsa.enums.Role;
 import com.github.heisdanielade.pamietampsa.exception.auth.*;
 import com.github.heisdanielade.pamietampsa.repository.AppUserRepository;
 import com.github.heisdanielade.pamietampsa.service.EmailService;
-import jakarta.mail.MessagingException;
+import com.github.heisdanielade.pamietampsa.util.EmailSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,9 +16,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -33,6 +30,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
+    private final EmailSender emailSender;
 
     public AppUser signup(RegisterUserDto input){
         if (userRepository.findByEmail(input.getEmail()).isPresent()) {
@@ -43,9 +41,8 @@ public class AuthenticationService {
         user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(10));
         user.setEnabled(false);
         user.setRole(Role.USER); // Default role
-        sendVerificationEmail(user);
-
         userRepository.save(user);
+        emailSender.sendVerificationEmail(user.getEmail(), user.getVerificationCode());
         return user;
     }
 
@@ -53,7 +50,6 @@ public class AuthenticationService {
     public AppUser authenticate(LoginUserDto input){
         AppUser user = userRepository.findByEmail(input.getEmail())
                 .orElseThrow(AccountNotFoundException::new);
-
         try{
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -68,7 +64,6 @@ public class AuthenticationService {
         if(!user.isEnabled()){
             throw new AccountNotVerifiedException();
         }
-
         user.setLastLoginAt(Instant.now());
         userRepository.save(user);
         return user;
@@ -97,35 +92,11 @@ public class AuthenticationService {
             user.setVerificationCode(null); // Verification code no longer needed
             user.setVerificationCodeExpiresAt(null);
             userRepository.save(user);
+            emailSender.sendUserRegistrationConfirmationEmail(user.getEmail());
 
-            String subject = "Welcome to PamietamPsa!";
-
-            try {
-                String htmlMessage = new String(Files.readAllBytes(Paths.get("src/main/resources/templates/email/account/registration.html")));
-                emailService.sendVerificationEmail(user.getEmail(), subject, htmlMessage);
-            } catch (IOException e){
-                System.out.println("(e) Error loading email template: " + e.getMessage());
-            } catch (MessagingException e) {
-                System.out.println("(e) Error sending email: " + e.getMessage());
-            }
         }
     }
 
-
-    private void sendVerificationEmail(AppUser user) {
-        String verificationCode = user.getVerificationCode();
-        String subject = verificationCode + " is your verification code";
-
-        try {
-            String template = new String(Files.readAllBytes(Paths.get("src/main/resources/templates/email/auth/email-verification.html")));
-            String htmlMessage = template.replace("{{verification_code}}", verificationCode);
-            emailService.sendVerificationEmail(user.getEmail(), subject, htmlMessage);
-        } catch (IOException e){
-            System.out.println("(e) Error loading email template: " + e.getMessage());
-        } catch (MessagingException e) {
-            System.out.println("(e) Error sending email: " + e.getMessage());
-        }
-    }
 
     public void resendVerificationEmail(String email) {
         Optional<AppUser> optionalUser = userRepository.findByEmail(email);
@@ -136,7 +107,7 @@ public class AuthenticationService {
             }
             user.setVerificationCode(generateVerificationCode());
             user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(5));
-            sendVerificationEmail(user);
+            emailSender.sendVerificationEmail(user.getEmail(), user.getVerificationCode());
             userRepository.save(user);
         } else {
             throw new AccountNotFoundException();
