@@ -16,8 +16,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleOtherExceptions(Exception ex) {
+        System.out.println("\n============== (e) Error: " + ex.getMessage() + "\n");
         Map<String, Object>  body = new HashMap<>();
-        body.put("error", ex.getMessage());
+        body.put("error", "An internal error occured.");
         body.put("timestamp", LocalDateTime.now());
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
