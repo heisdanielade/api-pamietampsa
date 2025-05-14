@@ -52,7 +52,7 @@ public class AuthenticationController {
         String jwtToken = jwtService.generateToken(authenticatedUser);
         Map<String, Object> data = new HashMap<>();
         data.put("token", jwtToken);
-        data.put("expirationTime", jwtService.getExpirationTime());
+        data.put("expirationTime", jwtService.getEXPIRATION_TIME());
 
         ApiResponse<Map<String, Object>> response = new ApiResponse<>(
                 HttpStatus.CREATED.value(),

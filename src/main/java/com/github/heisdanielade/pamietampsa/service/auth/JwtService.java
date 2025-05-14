@@ -19,16 +19,16 @@ import java.util.function.Function;
 @Component
 public class JwtService {
 
-    private final String secretKey; // used to sign and verify jwt tokens
+    private final String SECRET_KEY; // used to sign and verify jwt tokens
     @Getter
-    private final long expirationTime; // how long a jwt token remains valid
-    private final SecretKey key;
+    private final long EXPIRATION_TIME; // how long a jwt token remains valid
+    private final SecretKey KEY;
 
     public JwtService(@Value("${jwt.secret-key}") String secretKey,
-                      @Value("${jwt.expiration-time}") long expirationTime) {
-        this.secretKey = secretKey;
-        this.expirationTime = expirationTime;
-        this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+                      @Value("${jwt.expiration-time}") long EXPIRATION_TIME) {
+        this.SECRET_KEY = secretKey;
+        this.EXPIRATION_TIME = EXPIRATION_TIME;
+        this.KEY = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
     public String extractEmail(String token) {
@@ -57,7 +57,7 @@ public class JwtService {
         return generateToken(new HashMap<>(), userDetails);
     }
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails){
-        return buildToken(extraClaims, userDetails, this.expirationTime);
+        return buildToken(extraClaims, userDetails, this.EXPIRATION_TIME);
     }
 
     private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expirationTime) {
@@ -66,7 +66,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + this.expirationTime))
+                .setExpiration(new Date(System.currentTimeMillis() + this.EXPIRATION_TIME))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -80,7 +80,7 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(this.secretKey);
+        byte[] keyBytes = Decoders.BASE64.decode(this.SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
