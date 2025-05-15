@@ -10,13 +10,13 @@ import java.time.Instant;
 import java.time.LocalDate;
 
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Builder
 @Getter
 @Setter
 @Table()
-@NoArgsConstructor
-@AllArgsConstructor
 public class Pet {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pet_seq")
@@ -26,7 +26,7 @@ public class Pet {
     @Column(nullable = false)
     private String name;
 
-    private String petProfileImageURL = "some-placeholder-image";
+    private String profileImageURL;
     private String species;
     private String breed;
     private LocalDate birthDate;
@@ -38,7 +38,6 @@ public class Pet {
     @JoinColumn(name = "app_user_id", nullable = false)
     @JsonIgnore
     private AppUser owner;
-
 
     @CreationTimestamp
     @Column(updatable = false, nullable = false)
@@ -53,9 +52,21 @@ public class Pet {
         this.breed = breed;
         this.birthDate = birthDate;
     }
-
+    public Pet(String name, String profileImageURL, String species, String breed, LocalDate birthDate){
+        this.name = name;
+        this.profileImageURL = profileImageURL;
+        this.species = species;
+        this.breed = breed;
+        this.birthDate = birthDate;
+    }
     public Pet(String name, String species, String breed){
         this.name = name;
+        this.species = species;
+        this.breed = breed;
+    }
+    public Pet(String name, String profileImageURL, String species, String breed){
+        this.name = name;
+        this.profileImageURL = profileImageURL;
         this.species = species;
         this.breed = breed;
     }
@@ -64,7 +75,7 @@ public class Pet {
         if(this.birthDate != null){
             return LocalDate.now().getYear() - this.birthDate.getYear();
         } else{
-            return -1;
+            return 0;
         }
     }
 }
