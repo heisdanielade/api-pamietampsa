@@ -23,7 +23,7 @@ public class PetService {
     private final EmailService emailService;
     private final EmailSender emailSender;
 
-    public void addPetToUser(String userEmail, AddPetDto input){
+    public void addPetToUser(String userEmail, AddPetDto input, String imageURL){
         Optional<Pet> existingPet = petRepository.findByName(input.getName());
         if(existingPet.isPresent()){
             throw new PetAlreadyExistsException();
@@ -31,7 +31,7 @@ public class PetService {
         AppUser user = appUserRepository.findByEmail(userEmail)
                 .orElseThrow(AccountNotFoundException::new);
 
-        Pet pet = new Pet(input.getName(), input.getSpecies(), input.getBreed(), input.getBirthDate());
+        Pet pet = new Pet(input.getName(), imageURL, input.getSpecies(), input.getBreed(), input.getBirthDate());
         pet.setOwner(user);
         petRepository.save(pet);
         emailSender.sendPetRegistrationConfirmationEmail(userEmail, pet.getName(), pet.getSpecies());
