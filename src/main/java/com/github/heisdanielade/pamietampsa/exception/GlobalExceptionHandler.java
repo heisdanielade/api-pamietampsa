@@ -1,6 +1,8 @@
 package com.github.heisdanielade.pamietampsa.exception;
 
 import com.github.heisdanielade.pamietampsa.exception.auth.*;
+import com.github.heisdanielade.pamietampsa.exception.media.FileSizeTooLargeException;
+import com.github.heisdanielade.pamietampsa.exception.media.InvalidFileTypeException;
 import com.github.heisdanielade.pamietampsa.exception.pet.PetAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -114,5 +116,33 @@ public class GlobalExceptionHandler {
         body.put("timestamp", LocalDateTime.now());
         return new ResponseEntity<>(body, HttpStatus.CONFLICT);
     }
+
+
+
+    // ===========================================================================
+
+    // Uploaded File Type is not allowed
+    @ExceptionHandler(InvalidFileTypeException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidFileType(InvalidFileTypeException ex){
+        Map<String, Object>  body = new HashMap<>();
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", "Bad Request");
+        body.put("message", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    // Uploaded File Size exceeds the allowed limit
+    @ExceptionHandler(FileSizeTooLargeException.class)
+    public ResponseEntity<Map<String, Object>> handleFileSizeTooLarge(FileSizeTooLargeException ex){
+        Map<String, Object>  body = new HashMap<>();
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", "Bad Request");
+        body.put("message", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+
 }
 
