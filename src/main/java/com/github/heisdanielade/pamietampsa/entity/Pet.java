@@ -1,6 +1,7 @@
 package com.github.heisdanielade.pamietampsa.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.heisdanielade.pamietampsa.enums.Sex;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -29,6 +30,7 @@ public class Pet {
     private String profileImageURL;
     private String species;
     private String breed;
+    private Sex sex;
     private LocalDate birthDate;
 
     @Transient
@@ -46,29 +48,33 @@ public class Pet {
     @UpdateTimestamp
     private Instant updatedAt;
 
-    public Pet(String name, String species, String breed, LocalDate birthDate){
+    public Pet(String name, String species, String breed, Sex sex,  LocalDate birthDate){
         this.name = name;
         this.species = species;
         this.breed = breed;
+        this.sex = sex;
         this.birthDate = birthDate;
     }
-    public Pet(String name, String profileImageURL, String species, String breed, LocalDate birthDate){
+    public Pet(String name, String profileImageURL, String species, String breed, Sex sex, LocalDate birthDate){
         this.name = name;
         this.profileImageURL = profileImageURL;
         this.species = species;
         this.breed = breed;
+        this.sex = sex;
         this.birthDate = birthDate;
     }
-    public Pet(String name, String species, String breed){
+    public Pet(String name, String species, String breed, Sex sex){
         this.name = name;
         this.species = species;
         this.breed = breed;
+        this.sex = sex;
     }
-    public Pet(String name, String profileImageURL, String species, String breed){
+    public Pet(String name, String profileImageURL, String species, String breed, Sex sex){
         this.name = name;
         this.profileImageURL = profileImageURL;
         this.species = species;
         this.breed = breed;
+        this.sex = sex;
     }
 
     public Integer getAge(){

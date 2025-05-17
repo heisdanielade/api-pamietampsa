@@ -1,5 +1,6 @@
 package com.github.heisdanielade.pamietampsa.dto.pet;
 
+import com.github.heisdanielade.pamietampsa.enums.Sex;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,6 @@ public class AddPetDto {
     @NotBlank(message = "Species is required")
     private String species;
     private String breed;
+    private Sex sex;
     private LocalDate birthDate;
-
 }

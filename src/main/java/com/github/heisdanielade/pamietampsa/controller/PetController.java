@@ -65,6 +65,7 @@ public class PetController {
         Map<String, Object> data = new HashMap<>();
         data.put("petName", input.getName());
         data.put("species", input.getSpecies());
+        data.put("sex", input.getSex());
 
         ApiResponse<Map<String, Object>> response = new ApiResponse<>(
                 HttpStatus.CREATED.value(),
