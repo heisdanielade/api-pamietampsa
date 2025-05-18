@@ -2,6 +2,7 @@ package com.github.heisdanielade.pamietampsa.service.auth;
 
 import com.github.heisdanielade.pamietampsa.dto.user.LoginUserDto;
 import com.github.heisdanielade.pamietampsa.dto.user.RegisterUserDto;
+import com.github.heisdanielade.pamietampsa.dto.user.ResendVerificationEmailRequestDto;
 import com.github.heisdanielade.pamietampsa.dto.user.VerifyUserDto;
 import com.github.heisdanielade.pamietampsa.entity.AppUser;
 import com.github.heisdanielade.pamietampsa.enums.Role;
@@ -93,20 +94,19 @@ public class AuthenticationService {
             user.setVerificationCodeExpiresAt(null);
             userRepository.save(user);
             emailSender.sendUserRegistrationConfirmationEmail(user.getEmail());
-
         }
     }
 
 
-    public void resendVerificationEmail(String email) {
-        Optional<AppUser> optionalUser = userRepository.findByEmail(email);
+    public void resendVerificationEmail(ResendVerificationEmailRequestDto input) {
+        Optional<AppUser> optionalUser = userRepository.findByEmail(input.getEmail());
         if(optionalUser.isPresent()){
             AppUser user = optionalUser.get();
             if(user.isEnabled()){
                 throw new AccountAlreadyVerifiedException();
             }
             user.setVerificationCode(generateVerificationCode());
-            user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(5));
+            user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(10));
             emailSender.sendVerificationEmail(user.getEmail(), user.getVerificationCode());
             userRepository.save(user);
         } else {

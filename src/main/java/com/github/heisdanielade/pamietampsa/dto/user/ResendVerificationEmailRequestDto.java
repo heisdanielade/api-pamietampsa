@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public class EmailRequestDto {
+public class ResendVerificationEmailRequestDto {
     @NotBlank(message = "Email is required")
     private String email;
 }
