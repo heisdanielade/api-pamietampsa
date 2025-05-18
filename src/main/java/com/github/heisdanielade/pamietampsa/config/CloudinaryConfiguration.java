@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class CloudinaryConfiguration {
-
     private final String CLOUD_NAME;
     private final String API_KEY;
     private final String API_SECRET;
@@ -21,7 +20,6 @@ public class CloudinaryConfiguration {
         this.API_KEY = apiKey;
         this.API_SECRET = apiSecret;
     }
-
     @Bean
     public Cloudinary cloudinary(){
         return new Cloudinary(ObjectUtils.asMap(

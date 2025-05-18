@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +23,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping(path = "/v1/pets", produces = "application/json")
 public class PetController {
-
     private final PetService petService;
     private final Cloudinary cloudinary;
 
@@ -37,6 +35,7 @@ public class PetController {
         MultipartFile imageFile = input.getProfileImage();
 
         String imageUrl = null;
+
         if(imageFile != null && !imageFile.isEmpty()){
             long maxSize = 3 * 1024 * 1024; // 3 MB in bytes
             long imageSize = imageFile.getSize();
@@ -58,8 +57,6 @@ public class PetController {
             Map uploadResult = cloudinary.uploader().upload(imageFile.getBytes(), ObjectUtils.emptyMap());
             imageUrl = (String) uploadResult.get("secure_url");
         }
-
-
         petService.addPetToUser(userEmail, input, imageUrl);
 
         Map<String, Object> data = new HashMap<>();
