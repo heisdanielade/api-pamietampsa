@@ -1,8 +1,8 @@
 package com.github.heisdanielade.pamietampsa.controller;
 
-import com.github.heisdanielade.pamietampsa.dto.user.EmailRequestDto;
 import com.github.heisdanielade.pamietampsa.dto.user.LoginUserDto;
 import com.github.heisdanielade.pamietampsa.dto.user.RegisterUserDto;
+import com.github.heisdanielade.pamietampsa.dto.user.ResendVerificationEmailRequestDto;
 import com.github.heisdanielade.pamietampsa.dto.user.VerifyUserDto;
 import com.github.heisdanielade.pamietampsa.entity.AppUser;
 import com.github.heisdanielade.pamietampsa.response.ApiResponse;
@@ -72,10 +72,9 @@ public class AuthenticationController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping(path = "/resend-verification")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> resendVerificationCode(@RequestBody EmailRequestDto input){
-        String email = input.getEmail();
-        authenticationService.resendVerificationEmail(email);
+    @PostMapping(path = "/resend-verification-email")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> resendVerificationCode(@RequestBody ResendVerificationEmailRequestDto input){
+        authenticationService.resendVerificationEmail(input);
         ApiResponse<Map<String, Object>> response = new ApiResponse<>(
                 HttpStatus.OK.value(),
                 "Email verification code sent successfully."
