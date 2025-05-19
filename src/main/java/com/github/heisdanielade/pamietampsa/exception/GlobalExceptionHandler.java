@@ -51,7 +51,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidLoginCredentialsException.class)
     public ResponseEntity<Map<String, Object>> handleInvalidLoginCredentialsException(InvalidLoginCredentialsException ex){
         Map<String, Object>  body = new HashMap<>();
-        body.put("status", HttpStatus.UNAUTHORIZED.value());
+        body.put("status", HttpStatus.UNAUTHORIZED.value()); 
         body.put("error", "Unauthorized");
         body.put("message", ex.getMessage());
         body.put("timestamp", LocalDateTime.now());
@@ -62,11 +62,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccountNotVerifiedException.class)
     public ResponseEntity<Map<String, Object>> handleAccountNotVerifiedException(AccountNotVerifiedException ex){
         Map<String, Object>  body = new HashMap<>();
-        body.put("status", HttpStatus.FORBIDDEN.value());
-        body.put("error", "Forbidden");
+        body.put("status", HttpStatus.UNAUTHORIZED.value());
+        body.put("error", "Unauthorized");
         body.put("message", ex.getMessage());
         body.put("timestamp", LocalDateTime.now());
-        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
     }
 
     // Email attached to the Account is already verified; therefore, user isEnabled = true
