@@ -12,6 +12,7 @@ import com.github.heisdanielade.pamietampsa.service.EmailService;
 import com.github.heisdanielade.pamietampsa.util.EmailSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -58,6 +59,8 @@ public class AuthenticationService {
                             input.getPassword()
                     )
             );
+        } catch (DisabledException e){
+            throw new AccountNotVerifiedException();
         } catch (AuthenticationException e) {
             throw new InvalidLoginCredentialsException();
         }
