@@ -8,12 +8,15 @@ import com.github.heisdanielade.pamietampsa.entity.AppUser;
 import com.github.heisdanielade.pamietampsa.response.ApiResponse;
 import com.github.heisdanielade.pamietampsa.service.auth.AuthenticationService;
 import com.github.heisdanielade.pamietampsa.service.auth.JwtService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -29,7 +32,7 @@ public class AuthenticationController {
     }
 
     @PostMapping(path ="/signup")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> register(@RequestBody RegisterUserDto input) {
+    public ResponseEntity<ApiResponse<Map<String, Object>>> register(@Valid @RequestBody RegisterUserDto input) {
         AppUser registeredUser = authenticationService.signup(input);
 
         Map<String, Object> data = new HashMap<>();

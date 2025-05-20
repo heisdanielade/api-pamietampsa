@@ -6,6 +6,8 @@ import com.github.heisdanielade.pamietampsa.exception.media.InvalidFileTypeExcep
 import com.github.heisdanielade.pamietampsa.exception.pet.PetAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -20,9 +22,22 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleOtherExceptions(Exception ex) {
         System.out.println("\n============== (e) Error: " + ex.getMessage() + "\n");
         Map<String, Object>  body = new HashMap<>();
-        body.put("error", "An internal error occured.");
+        body.put("error", "Internal Error");
         body.put("timestamp", LocalDateTime.now());
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, Object> body = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach(error -> {
+            String fieldName = ((FieldError) error).getField();
+            String message = error.getDefaultMessage();
+            body.put(fieldName, message);
+            body.put("error", "Invalid Input");
+            body.put("timestamp", LocalDateTime.now());
+        });
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
     // Account with provided email already exists in the system

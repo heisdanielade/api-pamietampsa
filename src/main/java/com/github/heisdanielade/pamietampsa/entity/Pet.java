@@ -28,8 +28,12 @@ public class Pet {
     private String name;
 
     private String profileImageURL;
+
+    @Column(nullable = false)
     private String species;
     private String breed;
+
+    @Column(nullable = false)
     private Sex sex;
     private LocalDate birthDate;
 

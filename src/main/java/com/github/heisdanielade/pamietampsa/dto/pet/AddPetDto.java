@@ -17,6 +17,7 @@ public class AddPetDto {
     @NotBlank(message = "Species is required")
     private String species;
     private String breed;
+    @NotBlank(message = "Sex is required")
     private Sex sex;
     private LocalDate birthDate;
 }
