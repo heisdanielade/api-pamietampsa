@@ -29,11 +29,17 @@
 
 ## 📦 API Overview
 
+The API is versioned and documented with Swagger UI, which provides a visual interface to explore and test endpoints.
+> 🔐 Access to Swagger is restricted to users with the ADMIN role.
+
+
 Frontend URL: [pamietampsa.app](https://pamietampsa.netlify.app/)
 
-Base API (backend) URL: api.pam*****.app/v1
+Base API URL: api.pam*****.app/v1
 
-> **Note**: OpenAPI (Swagger) documentation is not yet available. It will be integrated soon.
+Docs URL: /swagger-ui.html
+
+
 
 ### Example Endpoints
 | Method | Endpoint           | Description                   |
@@ -51,7 +57,7 @@ Base API (backend) URL: api.pam*****.app/v1
 
 All protected endpoints require a **Bearer JWT token** in the `Authorization` header:
 
-Authorization: Bearer <jwt-token>
+Authorization: Bearer < user-jwt-token>
 
 ---
 
@@ -75,8 +81,6 @@ This is an actively developed backend. Coming soon:
 - OAuth2.0 (Google & Facebook)
 
 - Pet Health Record Management
-
-- Swagger UI + OpenAPI Docs
 
 - Rate limiting, role-based access control (RBAC), and other security hardening
 
