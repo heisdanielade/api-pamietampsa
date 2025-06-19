@@ -1,4 +1,3 @@
 package com.github.heisdanielade.pamietampsa.dto.pet;
 
-public class PetDto {
-}
+public record PetDto(String profileImageURL, String name, String species, String breed, String sex){}
