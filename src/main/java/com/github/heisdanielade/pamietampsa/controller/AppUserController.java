@@ -6,17 +6,14 @@ import com.github.heisdanielade.pamietampsa.exception.auth.AccountNotFoundExcept
 import com.github.heisdanielade.pamietampsa.repository.AppUserRepository;
 import com.github.heisdanielade.pamietampsa.response.ApiResponse;
 import com.github.heisdanielade.pamietampsa.service.AppUserService;
+import com.github.heisdanielade.pamietampsa.util.DtoMapper;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,13 +29,7 @@ public class AppUserController {
         AppUser currentUser = appUserRepository.findByEmail(userEmail)
                 .orElseThrow(AccountNotFoundException::new);
 
-        UserDto data = new UserDto(
-                currentUser.getEmail(),
-                currentUser.getName(),
-                currentUser.getInitial(),
-                String.valueOf(currentUser.isEnabled()),
-                String.valueOf(currentUser.getRole())
-        );
+        UserDto data = DtoMapper.toUserDto(currentUser);
 
         ApiResponse<UserDto> response = new ApiResponse<>(
                 HttpStatus.OK.value(),
@@ -52,9 +43,10 @@ public class AppUserController {
 
     // TODO: implement role based access
     @GetMapping("/users/all")
-    public ResponseEntity<List<AppUser>> allUsers(){
+    public ResponseEntity<List<UserDto>> allUsers(){
         List<AppUser> users = appUserService.allUsers();
-        return ResponseEntity.ok(users);
+
+        return ResponseEntity.ok(users.stream().map(DtoMapper::toUserDto).toList());
     }
 
 }

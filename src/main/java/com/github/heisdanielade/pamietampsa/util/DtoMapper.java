@@ -5,7 +5,7 @@ import com.github.heisdanielade.pamietampsa.dto.user.UserDto;
 import com.github.heisdanielade.pamietampsa.entity.AppUser;
 import com.github.heisdanielade.pamietampsa.entity.Pet;
 
-public class HelperMeth {
+public class DtoMapper {
 
     public static UserDto toUserDto(AppUser user) {
         return new UserDto(

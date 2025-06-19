@@ -82,8 +82,10 @@ public class AuthenticationService {
         }
         AppUser user = optionalUser.get();
         if(user.getVerificationCode() == null){
-            // If the user's verification code is null, it means the user has been verified since
-            // the verificationCode attribute is set to null upon verification.
+            /*
+             * If the user's verification code is null, it means the user has been verified since
+             * the verificationCode attribute is set to null upon verification.
+             */
             throw new AccountAlreadyVerifiedException();
         }
         if(user.getVerificationCodeExpiresAt() == null || user.getVerificationCodeExpiresAt().isBefore(LocalDateTime.now())){
