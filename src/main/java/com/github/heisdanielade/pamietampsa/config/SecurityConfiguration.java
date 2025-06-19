@@ -1,7 +1,6 @@
 package com.github.heisdanielade.pamietampsa.config;
 
 import com.github.heisdanielade.pamietampsa.util.JwtAuthenticationFilter;
-import org.apache.catalina.filters.CorsFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -44,7 +43,12 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/v1/auth/**", "/v1/hello").permitAll()
+                        .requestMatchers(
+                                "/v1/auth/**",
+                                "/v1/hello",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
