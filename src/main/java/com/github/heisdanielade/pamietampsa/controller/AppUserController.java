@@ -1,13 +1,16 @@
 package com.github.heisdanielade.pamietampsa.controller;
 
+import com.github.heisdanielade.pamietampsa.dto.user.UserDto;
 import com.github.heisdanielade.pamietampsa.entity.AppUser;
 import com.github.heisdanielade.pamietampsa.exception.auth.AccountNotFoundException;
 import com.github.heisdanielade.pamietampsa.repository.AppUserRepository;
 import com.github.heisdanielade.pamietampsa.response.ApiResponse;
 import com.github.heisdanielade.pamietampsa.service.AppUserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -24,19 +27,20 @@ public class AppUserController {
     private final AppUserRepository appUserRepository;
 
     @GetMapping(path = "/user")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> baseUserInfo(Principal principal){
+    public ResponseEntity<ApiResponse<UserDto>> baseUserInfo(Principal principal){
         String userEmail = principal.getName();
         AppUser currentUser = appUserRepository.findByEmail(userEmail)
                 .orElseThrow(AccountNotFoundException::new);
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("email", currentUser.getEmail());
-        data.put("name", currentUser.getName());
-        data.put("initial", currentUser.getInitial());
-        data.put("enabled", currentUser.isEnabled());
-        data.put("role", currentUser.getRole());
+        UserDto data = new UserDto(
+                currentUser.getEmail(),
+                currentUser.getName(),
+                currentUser.getInitial(),
+                String.valueOf(currentUser.isEnabled()),
+                String.valueOf(currentUser.getRole())
+        );
 
-        ApiResponse<Map<String, Object>> response = new ApiResponse<>(
+        ApiResponse<UserDto> response = new ApiResponse<>(
                 HttpStatus.OK.value(),
                 "Currently logged in user details.",
                 data
@@ -46,7 +50,7 @@ public class AppUserController {
     }
 
 
-    // Implement role based
+    // TODO: implement role based access
     @GetMapping("/users/all")
     public ResponseEntity<List<AppUser>> allUsers(){
         List<AppUser> users = appUserService.allUsers();
