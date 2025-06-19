@@ -21,6 +21,7 @@ public class DtoMapper {
         return new PetDto(
                 pet.getProfileImageURL(),
                 pet.getName(),
+                pet.getAge(),
                 pet.getSpecies(),
                 pet.getBreed(),
                 String.valueOf(pet.getSex())

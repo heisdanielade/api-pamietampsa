@@ -17,14 +17,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
 public class PetService {
     private final PetRepository petRepository;
     private final AppUserRepository appUserRepository;
-    private final EmailService emailService;
     private final EmailSender emailSender;
 
     public void addPetToUser(String userEmail, AddPetDto input, String imageURL){

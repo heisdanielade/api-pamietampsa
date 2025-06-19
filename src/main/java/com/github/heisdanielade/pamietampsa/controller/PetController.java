@@ -5,8 +5,12 @@ import com.cloudinary.utils.ObjectUtils;
 import com.github.heisdanielade.pamietampsa.dto.pet.AddPetDto;
 import com.github.heisdanielade.pamietampsa.exception.media.FileSizeTooLargeException;
 import com.github.heisdanielade.pamietampsa.exception.media.InvalidFileTypeException;
-import com.github.heisdanielade.pamietampsa.response.ApiResponse;
+import com.github.heisdanielade.pamietampsa.response.BaseApiResponse;
 import com.github.heisdanielade.pamietampsa.service.PetService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +23,7 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
+@Tag(name = "Pet", description = "Pet management (CRUD) endpoints")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/v1/pets", produces = "application/json")
@@ -26,8 +31,18 @@ public class PetController {
     private final PetService petService;
     private final Cloudinary cloudinary;
 
+    @Operation(
+            summary = "Add a new pet",
+            description = "Creates a new pet record for the currently authenticated user"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Pet added successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad Request"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "409", description = "Conflict, Pet already exists")
+    })
     @PostMapping(path = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ApiResponse<Map<String, Object>>> addPet(
+    public ResponseEntity<BaseApiResponse<Map<String, Object>>> addPet(
             @ModelAttribute AddPetDto input,
             Principal principal) throws IOException {
 
@@ -64,22 +79,31 @@ public class PetController {
         data.put("species", input.getSpecies());
         data.put("sex", input.getSex());
 
-        ApiResponse<Map<String, Object>> response = new ApiResponse<>(
+        BaseApiResponse<Map<String, Object>> response = new BaseApiResponse<>(
                 HttpStatus.CREATED.value(),
-                "Pet added for user successfully",
+                "Pet added successfully",
                 data
         );
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+
+    @Operation(
+            summary = "Get all pets",
+            description = "Returns all pets associated with the currently authenticated user"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
     @GetMapping(path = "/all")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> getAllPets(Principal principal){
+    public ResponseEntity<BaseApiResponse<Map<String, Object>>> getAllPets(Principal principal){
         String userEmail = principal.getName();
 
         Map<String, Object> data = new HashMap<>();
         data.put("pets", petService.getPetsForUser(userEmail));
 
-        ApiResponse<Map<String, Object>> response = new ApiResponse<>(
+        BaseApiResponse<Map<String, Object>> response = new BaseApiResponse<>(
                 HttpStatus.OK.value(),
                 "All pets for current user.",
                 data
