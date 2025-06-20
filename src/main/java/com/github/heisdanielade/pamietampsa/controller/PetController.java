@@ -3,6 +3,7 @@ package com.github.heisdanielade.pamietampsa.controller;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.github.heisdanielade.pamietampsa.dto.pet.AddPetDto;
+import com.github.heisdanielade.pamietampsa.dto.pet.PetDto;
 import com.github.heisdanielade.pamietampsa.exception.media.FileSizeTooLargeException;
 import com.github.heisdanielade.pamietampsa.exception.media.InvalidFileTypeException;
 import com.github.heisdanielade.pamietampsa.response.BaseApiResponse;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Tag(name = "Pet", description = "Pet management (CRUD) endpoints")
@@ -89,7 +91,7 @@ public class PetController {
 
 
     @Operation(
-            summary = "Get all pets",
+            summary = "Get all pets for a user",
             description = "Returns all pets associated with the currently authenticated user"
     )
     @ApiResponses(value = {
@@ -97,17 +99,16 @@ public class PetController {
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
     @GetMapping(path = "/all")
-    public ResponseEntity<BaseApiResponse<Map<String, Object>>> getAllPets(Principal principal){
+    public ResponseEntity<BaseApiResponse<List<PetDto>>> getAllPets(Principal principal){
         String userEmail = principal.getName();
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("pets", petService.getPetsForUser(userEmail));
+        List<PetDto> petDtoList = petService.getPetsForUser(userEmail);
 
-        BaseApiResponse<Map<String, Object>> response = new BaseApiResponse<>(
+        BaseApiResponse<List<PetDto>> response = new BaseApiResponse<>(
                 HttpStatus.OK.value(),
-                "All pets for current user.",
-                data
+                "Pets fetched successfully.",
+                petDtoList
         );
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(response);
     }
 }
