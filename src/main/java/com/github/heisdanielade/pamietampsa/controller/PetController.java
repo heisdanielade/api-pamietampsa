@@ -38,7 +38,7 @@ public class PetController {
             description = "Creates a new pet record for the currently authenticated user"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Pet added successfully"),
+            @ApiResponse(responseCode = "201", description = "Pet added successfully"),
             @ApiResponse(responseCode = "400", description = "Bad Request"),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "409", description = "Conflict, Pet already exists")
