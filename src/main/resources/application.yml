@@ -26,9 +26,18 @@ spring:
       max-file-size: 3MB
       max-request-size: 3MB
 
+  cache:
+    type: caffeine
+    cache-names:
+      - users
+      - pets
+    caffeine: # Up to 1000 entries stored, each entry expires 10 minutes after being cached
+      spec: maximumSize=1000,expiresAfterWrite=10m
+
 server:
   error:
     include-message: always
+
 
 logging:
   level:

@@ -2,6 +2,7 @@ package com.github.heisdanielade.pamietampsa.service;
 
 import com.github.heisdanielade.pamietampsa.entity.AppUser;
 import com.github.heisdanielade.pamietampsa.repository.AppUserRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,7 +17,7 @@ public class AppUserService {
         this.userRepository = userRepository;
     }
 
-
+    @Cacheable("users")
     public List<AppUser> allUsers(){
         return new ArrayList<>(userRepository.findAll());
     }

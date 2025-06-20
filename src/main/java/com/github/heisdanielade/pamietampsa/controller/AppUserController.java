@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,7 @@ public class AppUserController {
             @ApiResponse(responseCode = "400", description = "Bad Request"),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
     })
+    @Cacheable("users")
     @GetMapping(path = "/user")
     public ResponseEntity<BaseApiResponse<UserDto>> baseUserInfo(Principal principal){
         String userEmail = principal.getName();
@@ -64,6 +66,7 @@ public class AppUserController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
     })
     // TODO: implement role based access
+    @Cacheable("users")
     @GetMapping("/users/all")
     public ResponseEntity<BaseApiResponse<List<UserDto>>> allUsers(){
         List<AppUser> users = appUserService.allUsers();

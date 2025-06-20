@@ -12,6 +12,8 @@ import com.github.heisdanielade.pamietampsa.util.DtoMapper;
 import com.github.heisdanielade.pamietampsa.util.EmailSender;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +27,7 @@ public class PetService {
     private final AppUserRepository appUserRepository;
     private final EmailSender emailSender;
 
+    @CacheEvict(value = "pets", allEntries = true)
     public void addPetToUser(String userEmail, AddPetDto input, String imageURL){
         Optional<Pet> existingPet = petRepository.findByName(input.getName());
         if(existingPet.isPresent()){
@@ -39,6 +42,7 @@ public class PetService {
         emailSender.sendPetRegistrationConfirmationEmail(userEmail, pet.getName(), pet.getSpecies());
     }
 
+    @Cacheable("pets")
     public List<PetDto> getPetsForUser(String userEmail){
         AppUser user = appUserRepository.findByEmail(userEmail)
                 .orElseThrow(AccountNotFoundException::new);
