@@ -65,10 +65,16 @@ public class AppUserController {
     })
     // TODO: implement role based access
     @GetMapping("/users/all")
-    public ResponseEntity<List<UserDto>> allUsers(){
+    public ResponseEntity<BaseApiResponse<List<UserDto>>> allUsers(){
         List<AppUser> users = appUserService.allUsers();
 
-        return ResponseEntity.ok(users.stream().map(DtoMapper::toUserDto).toList());
+        List<UserDto> userDtoList = users.stream().map(DtoMapper::toUserDto).toList();
+        BaseApiResponse<List<UserDto>> response = new BaseApiResponse<>(
+                HttpStatus.OK.value(),
+                "Users fetched successfully.",
+                userDtoList);
+
+        return ResponseEntity.ok(response);
     }
 
 }
