@@ -39,7 +39,7 @@ public class AuthenticationController {
             description = "Creates a new user account and sends a confirmation email"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User registered successfully. Proceed to email verification"),
+            @ApiResponse(responseCode = "201", description = "User registered successfully. Proceed to email verification"),
             @ApiResponse(responseCode = "400", description = "Bad Request"),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "409", description = "Conflict, Account already exists")
@@ -82,11 +82,11 @@ public class AuthenticationController {
         data.put("expirationTime", jwtService.getEXPIRATION_TIME());
 
         BaseApiResponse<Map<String, Object>> response = new BaseApiResponse<>(
-                HttpStatus.CREATED.value(),
+                HttpStatus.OK.value(),
                 "User authenticated successfully.",
                 data
         );
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 
