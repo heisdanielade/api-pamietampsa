@@ -32,7 +32,7 @@ spring:
       - users
       - pets
     caffeine: # Up to 1000 entries stored, each entry expires 10 minutes after being cached
-      spec: maximumSize=1000,expiresAfterWrite=10m
+      spec: maximumSize=1000,expireAfterWrite=10m
 
 server:
   error:
@@ -41,6 +41,6 @@ server:
 
 logging:
   level:
-    org:
-      springframework:
-        security: DEBUG
+    org.springframework.cache.interceptor.CacheInterceptor: DEBUG
+    org.springframework.cache: DEBUG
+    org.springframework.security: DEBUG
