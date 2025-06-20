@@ -1,10 +1,10 @@
-# 🐾 PamiętamPsa – Pet Care Tracker API
+# PamiętamPsa – Pet Care Tracker API
 
 **PamiętamPsa** or **PamPsa** shortened (Polish for *"I remember the dog"*) is a backend REST API built with **Spring Boot** that allows users to manage their pets, receive notifications, and track key pet care activities. Designed with simplicity and real-life usability in mind, this project supports modern authentication and a growing feature set.
 
 ---
 
-## 🐶 Features
+## Features
 
 - **User Authentication** (JWT-based login & registration)
 - **Pet Management** – Add, view, edit, and delete pet profiles
@@ -15,7 +15,7 @@
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer       | Technology         |
 |-------------|--------------------|
@@ -27,13 +27,19 @@
 
 ---
 
-## 📦 API Overview
+## API Overview
+
+The API is versioned and documented with Swagger UI, which provides a visual interface to explore and test endpoints.
+> 🔐 Access to Swagger is restricted to users with the ADMIN role.
+
 
 Frontend URL: [pamietampsa.app](https://pamietampsa.netlify.app/)
 
-Base API (backend) URL: api.pam*****.app/v1
+Base API URL: api.pam*****.app/v1
 
-> **Note**: OpenAPI (Swagger) documentation is not yet available. It will be integrated soon.
+Docs URL: /swagger-ui.html
+
+
 
 ### Example Endpoints
 | Method | Endpoint           | Description                   |
@@ -47,15 +53,15 @@ Base API (backend) URL: api.pam*****.app/v1
 
 ---
 
-## 🔐 Authentication
+## Authentication
 
 All protected endpoints require a **Bearer JWT token** in the `Authorization` header:
 
-Authorization: Bearer <jwt-token>
+Authorization: Bearer < user-jwt-token>
 
 ---
 
-## 📧 Email Notifications
+## Email Notifications
 
 Email events currently include:
 - Successful user registration
@@ -67,7 +73,7 @@ Planned:
 
 ---
 
-## 🚧 Work in Progress
+## Work in Progress
 This is an actively developed backend. Coming soon:
 
 - Complete Reminders CRUD + Notification Triggers
@@ -76,12 +82,10 @@ This is an actively developed backend. Coming soon:
 
 - Pet Health Record Management
 
-- Swagger UI + OpenAPI Docs
-
 - Rate limiting, role-based access control (RBAC), and other security hardening
 
 
-### 🧑‍💻 Contributing
+### Contributing
 Kindly contact me for the possibility of collaborating/contributing, I look forward to hearing from you!
 
 ---
