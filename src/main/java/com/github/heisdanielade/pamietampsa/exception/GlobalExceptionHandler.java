@@ -6,6 +6,7 @@ import com.github.heisdanielade.pamietampsa.exception.media.InvalidFileTypeExcep
 import com.github.heisdanielade.pamietampsa.exception.pet.PetAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,7 +32,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleOtherExceptions(Exception ex) {
-        System.out.println("\n==== [GlobalExceptionHandler]: " + ex.getMessage() + "\n");
+        if (ex instanceof AuthenticationException) {
+            throw (AuthenticationException) ex; // let Spring Security handle it
+        }
+        System.out.println("\n==== [GlobalExceptionHandler] (e): " + ex.getMessage() + "\n");
         Map<String, Object>  body = new HashMap<>();
         body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
         body.put("error", "Internal Error");
