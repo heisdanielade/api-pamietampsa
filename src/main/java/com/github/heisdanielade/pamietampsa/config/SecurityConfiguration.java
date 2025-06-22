@@ -66,7 +66,7 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
 
-        System.out.println("\n============ Loading Cors Configuration\n");
+        System.out.println("\n==== [SecurityConfig] Loading Cors Configuration\n");
 
         String frontEndDevelopmentURL = "http://localhost:3000";
         String frontEndProductionURL = "https://pamietampsa.netlify.app";

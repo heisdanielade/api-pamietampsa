@@ -50,7 +50,7 @@ public class PetService {
         List<Pet> pets = petRepository.findByOwner(user);
 
 
-        System.out.println("==== [PetService] Fetching pets from DB"); // For testing cache
+        System.out.println(System.lineSeparator() + "==== [PetService] Fetching pets from DB"); // For testing cache
         return pets.stream()
                 .map(DtoMapper::toPetDto)
                 .toList();
