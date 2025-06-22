@@ -102,12 +102,12 @@ public class PetController {
     public ResponseEntity<BaseApiResponse<List<PetResponseDto>>> getAllPets(Principal principal){
         String userEmail = principal.getName();
 
-        List<PetResponseDto> petDtoList = petService.getPetsForUser(userEmail);
+        List<PetResponseDto> petResponseDtoList = petService.getPetsForUser(userEmail);
 
         BaseApiResponse<List<PetResponseDto>> response = new BaseApiResponse<>(
                 HttpStatus.OK.value(),
                 "Pets fetched successfully.",
-                petDtoList
+                petResponseDtoList
         );
         return ResponseEntity.ok(response);
     }
