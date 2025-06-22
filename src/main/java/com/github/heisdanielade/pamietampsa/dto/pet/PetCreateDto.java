@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class AddPetDto {
+public class PetCreateDto {
     @Schema(description = "Pet's name", example = "Emi")
     @NotBlank(message = "Name is required")
     private String name;

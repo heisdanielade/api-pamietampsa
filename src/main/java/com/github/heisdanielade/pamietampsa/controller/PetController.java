@@ -2,8 +2,8 @@ package com.github.heisdanielade.pamietampsa.controller;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.github.heisdanielade.pamietampsa.dto.pet.AddPetDto;
-import com.github.heisdanielade.pamietampsa.dto.pet.PetDto;
+import com.github.heisdanielade.pamietampsa.dto.pet.PetCreateDto;
+import com.github.heisdanielade.pamietampsa.dto.pet.PetResponseDto;
 import com.github.heisdanielade.pamietampsa.exception.media.FileSizeTooLargeException;
 import com.github.heisdanielade.pamietampsa.exception.media.InvalidFileTypeException;
 import com.github.heisdanielade.pamietampsa.response.BaseApiResponse;
@@ -45,7 +45,7 @@ public class PetController {
     })
     @PostMapping(path = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BaseApiResponse<Map<String, Object>>> addPet(
-            @ModelAttribute AddPetDto input,
+            @ModelAttribute PetCreateDto input,
             Principal principal) throws IOException {
 
         String userEmail = principal.getName();
@@ -99,12 +99,12 @@ public class PetController {
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
     @GetMapping(path = "/all")
-    public ResponseEntity<BaseApiResponse<List<PetDto>>> getAllPets(Principal principal){
+    public ResponseEntity<BaseApiResponse<List<PetResponseDto>>> getAllPets(Principal principal){
         String userEmail = principal.getName();
 
-        List<PetDto> petDtoList = petService.getPetsForUser(userEmail);
+        List<PetResponseDto> petDtoList = petService.getPetsForUser(userEmail);
 
-        BaseApiResponse<List<PetDto>> response = new BaseApiResponse<>(
+        BaseApiResponse<List<PetResponseDto>> response = new BaseApiResponse<>(
                 HttpStatus.OK.value(),
                 "Pets fetched successfully.",
                 petDtoList

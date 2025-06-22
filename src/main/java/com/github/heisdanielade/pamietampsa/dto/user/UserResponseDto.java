@@ -2,7 +2,7 @@ package com.github.heisdanielade.pamietampsa.dto.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public record UserDto(
+public record UserResponseDto(
         @Schema(description = "User's email", example = "korede@test.com")
         String email,
 

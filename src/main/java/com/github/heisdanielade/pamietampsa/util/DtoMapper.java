@@ -1,14 +1,14 @@
 package com.github.heisdanielade.pamietampsa.util;
 
-import com.github.heisdanielade.pamietampsa.dto.pet.PetDto;
-import com.github.heisdanielade.pamietampsa.dto.user.UserDto;
+import com.github.heisdanielade.pamietampsa.dto.pet.PetResponseDto;
+import com.github.heisdanielade.pamietampsa.dto.user.UserResponseDto;
 import com.github.heisdanielade.pamietampsa.entity.AppUser;
 import com.github.heisdanielade.pamietampsa.entity.Pet;
 
 public class DtoMapper {
 
-    public static UserDto toUserDto(AppUser user) {
-        return new UserDto(
+    public static UserResponseDto toUserDto(AppUser user) {
+        return new UserResponseDto(
                 user.getEmail(),
                 user.getName(),
                 user.getInitial(),
@@ -17,8 +17,8 @@ public class DtoMapper {
         );
     }
 
-    public static PetDto toPetDto(Pet pet) {
-        return new PetDto(
+    public static PetResponseDto toPetDto(Pet pet) {
+        return new PetResponseDto(
                 pet.getProfileImageURL(),
                 pet.getName(),
                 pet.getAge(),

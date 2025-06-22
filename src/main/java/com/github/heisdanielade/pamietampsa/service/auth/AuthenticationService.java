@@ -1,9 +1,9 @@
 package com.github.heisdanielade.pamietampsa.service.auth;
 
-import com.github.heisdanielade.pamietampsa.dto.user.LoginUserDto;
-import com.github.heisdanielade.pamietampsa.dto.user.RegisterUserDto;
-import com.github.heisdanielade.pamietampsa.dto.user.ResendVerificationEmailRequestDto;
-import com.github.heisdanielade.pamietampsa.dto.user.VerifyUserDto;
+import com.github.heisdanielade.pamietampsa.dto.auth.LoginRequestDto;
+import com.github.heisdanielade.pamietampsa.dto.auth.SignupRequestDto;
+import com.github.heisdanielade.pamietampsa.dto.auth.ResendVerificationEmailRequestDto;
+import com.github.heisdanielade.pamietampsa.dto.auth.EmailVerificationRequestDto;
 import com.github.heisdanielade.pamietampsa.entity.AppUser;
 import com.github.heisdanielade.pamietampsa.enums.Role;
 import com.github.heisdanielade.pamietampsa.exception.auth.*;
@@ -34,7 +34,7 @@ public class AuthenticationService {
     private final EmailService emailService;
     private final EmailSender emailSender;
 
-    public AppUser signup(RegisterUserDto input){
+    public AppUser signup(SignupRequestDto input){
         if (userRepository.findByEmail(input.getEmail()).isPresent()) {
             throw new AccountAlreadyExistsException();
         }
@@ -49,7 +49,7 @@ public class AuthenticationService {
     }
 
 
-    public AppUser authenticate(LoginUserDto input){
+    public AppUser authenticate(LoginRequestDto input){
         AppUser user = userRepository.findByEmail(input.getEmail())
                 .orElseThrow(AccountNotFoundException::new);
         try{
@@ -74,7 +74,7 @@ public class AuthenticationService {
     }
 
 
-    public void verifyUser(VerifyUserDto input){
+    public void verifyUser(EmailVerificationRequestDto input){
         Optional<AppUser> optionalUser = userRepository.findByEmail(input.getEmail());
 
         if(optionalUser.isEmpty()){

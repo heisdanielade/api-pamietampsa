@@ -1,9 +1,9 @@
 package com.github.heisdanielade.pamietampsa.controller;
 
-import com.github.heisdanielade.pamietampsa.dto.user.LoginUserDto;
-import com.github.heisdanielade.pamietampsa.dto.user.RegisterUserDto;
-import com.github.heisdanielade.pamietampsa.dto.user.ResendVerificationEmailRequestDto;
-import com.github.heisdanielade.pamietampsa.dto.user.VerifyUserDto;
+import com.github.heisdanielade.pamietampsa.dto.auth.LoginRequestDto;
+import com.github.heisdanielade.pamietampsa.dto.auth.SignupRequestDto;
+import com.github.heisdanielade.pamietampsa.dto.auth.ResendVerificationEmailRequestDto;
+import com.github.heisdanielade.pamietampsa.dto.auth.EmailVerificationRequestDto;
 import com.github.heisdanielade.pamietampsa.entity.AppUser;
 import com.github.heisdanielade.pamietampsa.response.BaseApiResponse;
 import com.github.heisdanielade.pamietampsa.service.auth.AuthenticationService;
@@ -45,7 +45,7 @@ public class AuthenticationController {
             @ApiResponse(responseCode = "409", description = "Conflict, Account already exists")
     })
     @PostMapping(path ="/signup")
-    public ResponseEntity<BaseApiResponse<Map<String, Object>>> register(@Valid @RequestBody RegisterUserDto input) {
+    public ResponseEntity<BaseApiResponse<Map<String, Object>>> register(@Valid @RequestBody SignupRequestDto input) {
         AppUser registeredUser = authenticationService.signup(input);
 
         Map<String, Object> data = new HashMap<>();
@@ -73,7 +73,7 @@ public class AuthenticationController {
             @ApiResponse(responseCode = "403", description = "Forbidden, Email not verified"),
     })
     @PostMapping(path = "/login")
-    public ResponseEntity<BaseApiResponse<Map<String, Object>>> authenticate(@RequestBody LoginUserDto input) {
+    public ResponseEntity<BaseApiResponse<Map<String, Object>>> authenticate(@RequestBody LoginRequestDto input) {
         AppUser authenticatedUser = authenticationService.authenticate(input);
 
         String jwtToken = jwtService.generateToken(authenticatedUser);
@@ -101,7 +101,7 @@ public class AuthenticationController {
             @ApiResponse(responseCode = "409", description = "Conflict")
     })
     @PostMapping(path = "/verify-email")
-    public ResponseEntity<BaseApiResponse<Map<String, Object>>> verifyUser(@RequestBody VerifyUserDto input){
+    public ResponseEntity<BaseApiResponse<Map<String, Object>>> verifyUser(@RequestBody EmailVerificationRequestDto input){
         authenticationService.verifyUser(input);
         BaseApiResponse<Map<String, Object>> response = new BaseApiResponse<>(
                 HttpStatus.OK.value(),

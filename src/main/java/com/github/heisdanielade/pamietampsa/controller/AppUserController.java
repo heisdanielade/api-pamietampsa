@@ -1,6 +1,6 @@
 package com.github.heisdanielade.pamietampsa.controller;
 
-import com.github.heisdanielade.pamietampsa.dto.user.UserDto;
+import com.github.heisdanielade.pamietampsa.dto.user.UserResponseDto;
 import com.github.heisdanielade.pamietampsa.entity.AppUser;
 import com.github.heisdanielade.pamietampsa.exception.auth.AccountNotFoundException;
 import com.github.heisdanielade.pamietampsa.repository.AppUserRepository;
@@ -40,14 +40,14 @@ public class AppUserController {
     })
     @Cacheable("users")
     @GetMapping(path = "/user")
-    public ResponseEntity<BaseApiResponse<UserDto>> baseUserInfo(Principal principal){
+    public ResponseEntity<BaseApiResponse<UserResponseDto>> baseUserInfo(Principal principal){
         String userEmail = principal.getName();
         AppUser currentUser = appUserRepository.findByEmail(userEmail)
                 .orElseThrow(AccountNotFoundException::new);
 
-        UserDto data = DtoMapper.toUserDto(currentUser);
+        UserResponseDto data = DtoMapper.toUserDto(currentUser);
 
-        BaseApiResponse<UserDto> response = new BaseApiResponse<>(
+        BaseApiResponse<UserResponseDto> response = new BaseApiResponse<>(
                 HttpStatus.OK.value(),
                 "Currently logged in user details.",
                 data
@@ -68,11 +68,11 @@ public class AppUserController {
     // TODO: implement role based access
     @Cacheable("users")
     @GetMapping("/users/all")
-    public ResponseEntity<BaseApiResponse<List<UserDto>>> allUsers(){
+    public ResponseEntity<BaseApiResponse<List<UserResponseDto>>> allUsers(){
         List<AppUser> users = appUserService.allUsers();
 
-        List<UserDto> userDtoList = users.stream().map(DtoMapper::toUserDto).toList();
-        BaseApiResponse<List<UserDto>> response = new BaseApiResponse<>(
+        List<UserResponseDto> userDtoList = users.stream().map(DtoMapper::toUserDto).toList();
+        BaseApiResponse<List<UserResponseDto>> response = new BaseApiResponse<>(
                 HttpStatus.OK.value(),
                 "Users fetched successfully.",
                 userDtoList);

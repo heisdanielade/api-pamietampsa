@@ -1,4 +1,4 @@
-package com.github.heisdanielade.pamietampsa.dto.user;
+package com.github.heisdanielade.pamietampsa.dto.auth;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class VerifyUserDto {
+public class EmailVerificationRequestDto {
 
     @Schema(description = "User's email", example = "johndoe@test.com")
     private String email;

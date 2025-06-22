@@ -1,7 +1,7 @@
 package com.github.heisdanielade.pamietampsa.service;
 
-import com.github.heisdanielade.pamietampsa.dto.pet.AddPetDto;
-import com.github.heisdanielade.pamietampsa.dto.pet.PetDto;
+import com.github.heisdanielade.pamietampsa.dto.pet.PetCreateDto;
+import com.github.heisdanielade.pamietampsa.dto.pet.PetResponseDto;
 import com.github.heisdanielade.pamietampsa.entity.AppUser;
 import com.github.heisdanielade.pamietampsa.entity.Pet;
 import com.github.heisdanielade.pamietampsa.exception.auth.AccountNotFoundException;
@@ -28,7 +28,7 @@ public class PetService {
     private final EmailSender emailSender;
 
     @CacheEvict(value = "pets", allEntries = true)
-    public void addPetToUser(String userEmail, AddPetDto input, String imageURL){
+    public void addPetToUser(String userEmail, PetCreateDto input, String imageURL){
         Optional<Pet> existingPet = petRepository.findByName(input.getName());
         if(existingPet.isPresent()){
             throw new PetAlreadyExistsException();
@@ -43,7 +43,7 @@ public class PetService {
     }
 
     @Cacheable("pets")
-    public List<PetDto> getPetsForUser(String userEmail){
+    public List<PetResponseDto> getPetsForUser(String userEmail){
         AppUser user = appUserRepository.findByEmail(userEmail)
                 .orElseThrow(AccountNotFoundException::new);
 

@@ -2,7 +2,7 @@ package com.github.heisdanielade.pamietampsa.dto.pet;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public record PetDto(
+public record PetResponseDto(
         @Schema(description = "Link to cloud storage of pet profile image")
         String profileImageURL,
 
