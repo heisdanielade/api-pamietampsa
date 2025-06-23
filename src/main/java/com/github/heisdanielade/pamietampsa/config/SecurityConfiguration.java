@@ -1,7 +1,7 @@
 package com.github.heisdanielade.pamietampsa.config;
 
 import com.github.heisdanielade.pamietampsa.exception.CustomAuthenticationEntryPoint;
-import com.github.heisdanielade.pamietampsa.util.JwtAuthenticationFilter;
+import com.github.heisdanielade.pamietampsa.filter.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;

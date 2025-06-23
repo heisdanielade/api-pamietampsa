@@ -1,4 +1,4 @@
-package com.github.heisdanielade.pamietampsa.util;
+package com.github.heisdanielade.pamietampsa.filter;
 
 import com.github.heisdanielade.pamietampsa.service.auth.CustomUserDetailsService;
 import com.github.heisdanielade.pamietampsa.service.auth.JwtService;
