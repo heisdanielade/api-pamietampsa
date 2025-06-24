@@ -61,6 +61,17 @@ Authorization: Bearer < user-jwt-token>
 
 ---
 
+## Rate Limiting
+
+To protect public endpoints from abuse, this API applies rate limiting.
+
+- Limit: 5 requests per minute per IP
+- Affected routes: `/v1/auth/*`
+
+If this limit is exceeded, requests return HTTP **429 Too Many Requests**.
+
+---
+
 ## Email Notifications
 
 Email events currently include:
