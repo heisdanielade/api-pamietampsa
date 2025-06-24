@@ -21,8 +21,8 @@
 |-------------|--------------------|
 | Backend     | Spring Boot        |
 | Database    | PostgreSQL         |
-| Auth        | JWT (stateless)    |
-| Mail        | SMTP (email alerts)|
+| Auth        | JWT                |
+| Mail        | SMTP               |
 | Deployment  | Railway.app        |
 
 ---
