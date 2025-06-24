@@ -53,23 +53,19 @@ public class PetController {
 
         String imageUrl = null;
 
-        if(imageFile != null && !imageFile.isEmpty()){
+        if (imageFile != null && !imageFile.isEmpty()) {
             long maxSize = 3 * 1024 * 1024; // 3 MB in bytes
-            long imageSize = imageFile.getSize();
-            String originalFilename = imageFile.getOriginalFilename();
-            String contentType = imageFile.getContentType();
+            String filename = imageFile.getOriginalFilename();
+            String type = imageFile.getContentType();
 
-            if (contentType == null ||
-                (!contentType.equalsIgnoreCase("image/jpeg") &&
-                 !contentType.equalsIgnoreCase("image/png"))) {
+            if (type == null ||
+                !(type.equalsIgnoreCase("image/jpeg") || type.equalsIgnoreCase("image/png")) ||
+                  (filename != null && !filename.toLowerCase().matches(".*\\.(jpg|jpeg|png)$"))
+            ) {
                 throw new InvalidFileTypeException("Only JPG and PNG images are allowed.");
             }
-            if (originalFilename != null &&
-                !originalFilename.toLowerCase().matches(".*\\.(jpg|jpeg|png)$")) {
-                throw new InvalidFileTypeException("Only JPG and PNG images are allowed.");
-            }
-            if (imageSize > maxSize){
-                throw new FileSizeTooLargeException("Profile Image size is too large.");
+            if (imageFile.getSize() > maxSize) {
+                throw new FileSizeTooLargeException("Image size is too large.");
             }
             Map uploadResult = cloudinary.uploader().upload(imageFile.getBytes(), ObjectUtils.emptyMap());
             imageUrl = (String) uploadResult.get("secure_url");
@@ -99,7 +95,7 @@ public class PetController {
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
     @GetMapping(path = "/all")
-    public ResponseEntity<BaseApiResponse<List<PetResponseDto>>> getAllPets(Principal principal){
+    public ResponseEntity<BaseApiResponse<List<PetResponseDto>>> getAllPets(Principal principal) {
         String userEmail = principal.getName();
 
         List<PetResponseDto> petResponseDtoList = petService.getPetsForUser(userEmail);

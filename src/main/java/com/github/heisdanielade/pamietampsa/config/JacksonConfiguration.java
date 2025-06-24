@@ -12,7 +12,7 @@ public class JacksonConfiguration {
     @Bean
     public ObjectMapper objectMapper() {
 
-        System.out.println("\n==== [JacksonConfiguration] Executing\n");
+        System.out.println("\n==== [JacksonConfig] Executing\n");
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
