@@ -4,7 +4,7 @@ import com.github.heisdanielade.pamietampsa.exception.CustomException;
 
 public class AccountNotVerifiedException extends CustomException {
     public AccountNotVerifiedException() {
-        super("Account disabled. Please verify your email.");
+        super("Account disabled, verify your email");
     }
 
     public AccountNotVerifiedException(String message) {

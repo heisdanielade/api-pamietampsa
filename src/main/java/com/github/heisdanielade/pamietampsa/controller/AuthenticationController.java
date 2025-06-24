@@ -55,7 +55,7 @@ public class AuthenticationController {
 
         BaseApiResponse<Map<String, Object>> response = new BaseApiResponse<>(
                 HttpStatus.CREATED.value(),
-                "User registered successfully. Proceed to email verification.",
+                "User registered successfully, proceed to email verification",
                 data
         );
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -83,7 +83,7 @@ public class AuthenticationController {
 
         BaseApiResponse<Map<String, Object>> response = new BaseApiResponse<>(
                 HttpStatus.OK.value(),
-                "User authenticated successfully.",
+                "User authenticated successfully",
                 data
         );
         return ResponseEntity.ok(response);
@@ -105,7 +105,7 @@ public class AuthenticationController {
         authenticationService.verifyUser(input);
         BaseApiResponse<Map<String, Object>> response = new BaseApiResponse<>(
                 HttpStatus.OK.value(),
-                "Email verified successfully."
+                "Email verified successfully"
         );
         return ResponseEntity.ok(response);
     }
@@ -126,7 +126,7 @@ public class AuthenticationController {
         authenticationService.resendVerificationEmail(input);
         BaseApiResponse<Map<String, Object>> response = new BaseApiResponse<>(
                 HttpStatus.OK.value(),
-                "Email verification code sent successfully."
+                "Email verification code sent successfully"
         );
         return ResponseEntity.ok(response);
     }

@@ -4,7 +4,7 @@ import com.github.heisdanielade.pamietampsa.exception.CustomException;
 
 public class AccountAlreadyExistsException extends CustomException {
     public AccountAlreadyExistsException() {
-        super("Account already exists.");
+        super("Account already exists");
     }
 
     public AccountAlreadyExistsException(String message) {

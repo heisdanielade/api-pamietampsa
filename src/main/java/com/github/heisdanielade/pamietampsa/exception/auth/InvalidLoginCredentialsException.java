@@ -5,7 +5,7 @@ import com.github.heisdanielade.pamietampsa.exception.CustomException;
 public class InvalidLoginCredentialsException extends CustomException {
 
     public InvalidLoginCredentialsException(){
-        super("Invalid Email or Password.");
+        super("Invalid email or password");
     }
 
     public InvalidLoginCredentialsException(String message){

@@ -64,10 +64,10 @@ public class AppUserService {
                 .ifPresent(currentUser::setName);
 
         userRepository.save(currentUser);
-//        emailSender
+//        TODO: send notification email
     }
 
-    // Delete user
+    // TODO: Delete user
     public void deleteAppUser(AppUser appUser){
         // Set the account expiration date to a 2-week timer
         appUser.setAccountExpirationDate(LocalDate.now().plusDays(14));

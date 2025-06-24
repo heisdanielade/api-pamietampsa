@@ -50,7 +50,7 @@ public class AdminController {
 
         BaseApiResponse<List<UserResponseDto>> response = new BaseApiResponse<>(
                 HttpStatus.OK.value(),
-                "All users fetched successfully.",
+                "All users fetched successfully",
                 data
         );
 

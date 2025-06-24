@@ -47,7 +47,7 @@ public class AppUserController {
 
         BaseApiResponse<UserResponseDto> response = new BaseApiResponse<>(
           HttpStatus.OK.value(),
-          "User info fetched successfully.",
+          "User info fetched successfully",
           data
         );
         return ResponseEntity.ok(response);
@@ -69,7 +69,7 @@ public class AppUserController {
 
         BaseApiResponse<Map<String, Object>> response = new BaseApiResponse<>(
                 HttpStatus.OK.value(),
-                "User info modified successfully."
+                "User info modified successfully"
         );
         return ResponseEntity.ok(response);
     }

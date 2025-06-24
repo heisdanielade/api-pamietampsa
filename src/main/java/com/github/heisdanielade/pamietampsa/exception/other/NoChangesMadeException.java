@@ -4,7 +4,7 @@ import com.github.heisdanielade.pamietampsa.exception.CustomException;
 
 public class NoChangesMadeException extends CustomException {
     public NoChangesMadeException() {
-        super("No changes made.");
+        super("No changes made");
     }
 
     public NoChangesMadeException(String message) {

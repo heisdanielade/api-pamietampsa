@@ -4,7 +4,7 @@ import com.github.heisdanielade.pamietampsa.exception.CustomException;
 
 public class ExpiredVerificationCodeException extends CustomException {
     public ExpiredVerificationCodeException() {
-        super("Verification code has expired.");
+        super("Verification code has expired");
     }
 
     public ExpiredVerificationCodeException(String message) {

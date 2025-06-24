@@ -102,7 +102,7 @@ public class PetController {
 
         BaseApiResponse<List<PetResponseDto>> response = new BaseApiResponse<>(
                 HttpStatus.OK.value(),
-                "Pets fetched successfully.",
+                "Pets fetched successfully",
                 petResponseDtoList
         );
         return ResponseEntity.ok(response);
