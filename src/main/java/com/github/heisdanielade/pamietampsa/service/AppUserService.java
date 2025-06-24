@@ -63,9 +63,6 @@ public class AppUserService {
         Optional.ofNullable(input.getName())
                 .ifPresent(currentUser::setName);
 
-        System.out.println("After setting: " + currentUser);
-
-
         userRepository.save(currentUser);
 //        emailSender
     }

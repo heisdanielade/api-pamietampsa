@@ -1,5 +1,6 @@
 package com.github.heisdanielade.pamietampsa.service.auth;
 
+import com.github.heisdanielade.pamietampsa.entity.AppUser;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -31,7 +32,7 @@ public class JwtService {
         this.KEY = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String extractEmail(String token) {
+    public String extractUserId(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -54,6 +55,7 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
+
         return generateToken(new HashMap<>(), userDetails);
     }
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails){
@@ -61,10 +63,18 @@ public class JwtService {
     }
 
     private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expirationTime) {
+        if (!(userDetails instanceof AppUser)) {
+            throw new IllegalArgumentException("UserDetails must be an instance of AppUser");
+        }
+        AppUser user = (AppUser) userDetails;
+
+        /*  Recommended to use user id or UUID for jwt subject,
+        * Email or custom username could be changed but IDs are final.
+        * */
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
+                .setSubject(user.getId().toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + this.EXPIRATION_TIME))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
@@ -72,8 +82,12 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails){
-        final String email = extractEmail(token);
-        return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        if (!(userDetails instanceof AppUser)) {
+            throw new IllegalArgumentException("UserDetails must be an instance of AppUser");
+        }
+        AppUser user = (AppUser) userDetails;
+        final String tokenUserId = extractUserId(token);
+        return (tokenUserId.equals(((AppUser) userDetails).getId().toString()) && !isTokenExpired(token));
     }
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
