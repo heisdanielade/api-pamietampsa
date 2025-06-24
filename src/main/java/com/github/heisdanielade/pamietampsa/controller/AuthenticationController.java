@@ -86,7 +86,7 @@ public class AuthenticationController {
                 "User authenticated successfully.",
                 data
         );
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(response);
     }
 
 
@@ -107,7 +107,7 @@ public class AuthenticationController {
                 HttpStatus.OK.value(),
                 "Email verified successfully."
         );
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(response);
     }
 
 
@@ -128,6 +128,6 @@ public class AuthenticationController {
                 HttpStatus.OK.value(),
                 "Email verification code sent successfully."
         );
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(response);
     }
 }

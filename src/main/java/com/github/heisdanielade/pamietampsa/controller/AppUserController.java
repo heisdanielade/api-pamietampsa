@@ -1,5 +1,6 @@
 package com.github.heisdanielade.pamietampsa.controller;
 
+import com.github.heisdanielade.pamietampsa.dto.user.UserPatchDto;
 import com.github.heisdanielade.pamietampsa.dto.user.UserResponseDto;
 import com.github.heisdanielade.pamietampsa.repository.AppUserRepository;
 import com.github.heisdanielade.pamietampsa.response.BaseApiResponse;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
@@ -17,11 +19,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @Tag(name = "App User", description = "User management (CRUD) endpoints")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/v1", produces = "application/json")
+@RequestMapping(path = "/v1/user", produces = "application/json")
 public class AppUserController {
 
     private final AppUserService appUserService;
@@ -37,7 +40,7 @@ public class AppUserController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
     })
     @Cacheable("users")
-    @GetMapping(path = "/user")
+    @GetMapping(path = "")
     public ResponseEntity<BaseApiResponse<UserResponseDto>> baseUserInfo(Principal principal){
 
         UserResponseDto data = appUserService.getUserInfo(principal);
@@ -47,33 +50,27 @@ public class AppUserController {
           "User info fetched successfully.",
           data
         );
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(response);
     }
 
 
-
     @Operation(
-            summary = "Get all users",
-            description = "Returns details of all users, only accessible to App User if hasRole('ADMIN')"
+            summary = "Edit user details",
+            description = "Edit's currently logged in user's details. PATCH"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "200", description = "0K"),
             @ApiResponse(responseCode = "400", description = "Bad Request"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    // TODO: implement role based access
-    @Cacheable("users")
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/users/all")
-    public ResponseEntity<BaseApiResponse<List<UserResponseDto>>> allUsers(){
-        List<UserResponseDto> data = appUserService.getAllUsers();
+    @PatchMapping(path = "/edit")
+    public ResponseEntity<BaseApiResponse<Map<String, Object>>> modifyUserInfo(@Valid @RequestBody UserPatchDto userPatchDto, Principal principal){
+        appUserService.editUserInfo(userPatchDto, principal);
 
-        BaseApiResponse<List<UserResponseDto>> response = new BaseApiResponse<>(
+        BaseApiResponse<Map<String, Object>> response = new BaseApiResponse<>(
                 HttpStatus.OK.value(),
-                "All users fetched successfully.",
-                data
-                );
-
+                "User info modified successfully."
+        );
         return ResponseEntity.ok(response);
     }
 
