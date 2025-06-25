@@ -18,17 +18,19 @@ public class CustomRateLimitingFilter implements Filter {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private static final Map<String, Bandwidth> RATE_LIMTS = Map.of(
-            "v1/auth/login", Bandwidth.classic(5, Refill.greedy(5, Duration.ofMinutes(1))),
-            "v1/auth/register", Bandwidth.classic(3, Refill.greedy(3, Duration.ofMinutes(1))),
-            "v1/auth/resend-verification-email", Bandwidth.classic(2, Refill.greedy(2, Duration.ofMinutes(1)))
+    private static final Map<String, Bandwidth> RATE_LIMITS = Map.of(
+            "/v1/auth/login", Bandwidth.classic(5, Refill.greedy(5, Duration.ofMinutes(1))),
+            "/v1/auth/signup", Bandwidth.classic(3, Refill.greedy(3, Duration.ofMinutes(1))),
+            "/v1/auth/resend-verification-email", Bandwidth.classic(2, Refill.greedy(2, Duration.ofMinutes(1))),
+
+            "/v1/user/edit", Bandwidth.classic(2, Refill.greedy(2, Duration.ofDays(7)))
     );
     private final Map<String, Bucket> cache = new ConcurrentHashMap<>();
 
 
     private Bucket resolveBucket(String ip, String path) {
         String key = ip + ":" + path;
-        Bandwidth limit = RATE_LIMTS.getOrDefault(path,
+        Bandwidth limit = RATE_LIMITS.getOrDefault(path,
                 Bandwidth.classic(5, Refill.greedy(5, Duration.ofMinutes(1))));
         return cache.computeIfAbsent(key, k -> Bucket.builder().addLimit(limit).build());
     }
